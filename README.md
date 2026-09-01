@@ -1,3 +1,4 @@
+```text
 ===============================================================================
   ___        _       _  _      _          ___     _ _  
  / __|_  _ _(_)__   /_\  | |_ __| |_  __ _ / __|___| | | 
@@ -16,7 +17,7 @@ License:     GNU General Public License (GPL)
 -------------------------------------------------------------------------------
 1. OVERVIEW
 -------------------------------------------------------------------------------
-CyricAlphaCell is a high-performance, OpenMP-accelerated track-structure Monte 
+CyricAlphaCell (C.A.C) is a high-performance, OpenMP-accelerated track-structure Monte 
 Carlo engine built in modern Fortran. It calculates cellular-level macroscopic 
 doses, dose-averaged LET, dynamic micro-domain specific energy distributions 
 (f1(z)), and evaluates cell survival using the Microdosimetric Kinetic Model 
@@ -31,31 +32,33 @@ Alpha particles are transported using CSDA coupled with randomized energy-loss
 straggling. Stopping powers (S = dE/dx) are interpolated from NIST ASTAR data.
 
 Bohr Straggling Variance:
-$$ \sigma_{Bohr}^2 = 4\pi z^2 Z_{eff} e^4 N \Delta s $$
+sigma_Bohr^2 = 4 * pi * z^2 * Z_eff * e^4 * N * ds
+
 Energy loss is sampled from a Lognormal-Gaussian distribution bounded by the 
 mean energy loss to prevent unphysical negative energy sampling.
 
 [ MICRODOSIMETRY ]
 Specific Energy (z):
-$$ z = \frac{\epsilon}{m} $$
-Where \epsilon is the deposited energy and m is the mass of the target domain.
+z = epsilon / m
+Where epsilon is the deposited energy and m is the mass of the target domain.
 
 Frequency-Mean Specific Energy (z_F) & Dose-Averaged LET (L_D):
-$$ z_F = \frac{\sum z_i}{N_{hits}} \quad \text{and} \quad L_D = \frac{\sum (L_i \cdot \epsilon_i)}{\sum \epsilon_i} $$
+z_F = (Sum of z_i) / N_hits
+L_D = (Sum of L_i * epsilon_i) / (Sum of epsilon_i)
 
 [ RADIOBIOLOGY & MKM OVERKILL EFFECT ]
 The domain-specific dose-mean specific energy (z_D) is calculated analytically 
 from L_D for a domain of diameter d:
-$$ z_D = \frac{0.204 \cdot L_D}{d^2} $$
+z_D = (0.204 * L_D) / d^2
 
 To account for the overkill effect at high LET (where excess energy yields 
 diminishing cell kill), z_D is clamped using the saturation parameter z_0 
-(derived from y_0 = 150 keV/µm):
-$$ z_D^* = \frac{z_0^2}{z_D} \left( 1 - \exp\left(-\frac{z_D^2}{z_0^2}\right) \right) $$
+(derived from y_0 = 150 keV/um):
+z_D* = (z_0^2 / z_D) * (1 - exp(-(z_D^2) / z_0^2))
 
 Survival Fraction (S) & Alpha parameter:
-$$ \alpha = \alpha_X + \beta_X z_D^* $$
-$$ S = \exp(-\alpha D - \beta_X D^2) $$
+alpha = alpha_X + beta_X * z_D*
+S = exp(-alpha * D - beta_X * D^2)
 
 -------------------------------------------------------------------------------
 3. BUILD INSTRUCTIONS (CMAKE)
@@ -69,7 +72,7 @@ $ mkdir build && cd build
 $ cmake ..
 $ make
 
-This will produce the `cac.bin` executable in your build directory.
+This will produce the cac.bin executable in your build directory.
 
 -------------------------------------------------------------------------------
 4. USER MANUAL & INPUT PREPARATION
@@ -78,7 +81,7 @@ Run the executable by passing your input file as the first argument:
 $ ./cac.bin inputs.i
 
 The input file MUST follow a strict, whitespace-separated format. Comments (#) 
-are ignored. Below is a standard template (e.g., `inputs.i`):
+are ignored. Below is a standard template (e.g., inputs.i):
 
 #-- - CyricAlphaCell Parameters - --
 100000       # nps_total
@@ -113,6 +116,9 @@ data/water_liquid.dedx # Path to stopping power file
 1       0.0e+0        0.0e+0          0.0e+0      5.00e-4     1.0e-3      1.0
 2       -1.001e-3     -1.73378e-3     0.0e+0      5.00e-4     1.0e-3      0.0
 3       1.001e-3      -1.73378e-3     0.0e+0      5.00e-4     1.0e-3      0.0
+
+*Note: Use the included HTML UI configurator to easily generate massive, 
+non-overlapping cellular geometry arrays for your inputs.i file.*
 
 -------------------------------------------------------------------------------
 5. OUTPUT FILES
