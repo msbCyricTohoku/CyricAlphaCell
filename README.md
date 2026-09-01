@@ -117,9 +117,6 @@ data/water_liquid.dedx # Path to stopping power file
 2       -1.001e-3     -1.73378e-3     0.0e+0      5.00e-4     1.0e-3      0.0
 3       1.001e-3      -1.73378e-3     0.0e+0      5.00e-4     1.0e-3      0.0
 
-*Note: Use the included HTML UI configurator to easily generate massive, 
-non-overlapping cellular geometry arrays for your inputs.i file.*
-
 -------------------------------------------------------------------------------
 5. OUTPUT FILES
 -------------------------------------------------------------------------------
