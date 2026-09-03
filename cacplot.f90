@@ -1,6 +1,6 @@
 ! ==============================================================================
-! CyricAlphaCell: Cellular Alpha Microdosimetry Monte Carlo
-! Version 1.0.0
+! CyricAlphaCell: Cellular Alpha Microdosimetry Monte Carlo (optimized)
+! Version 1.0.1
 ! ==============================================================================
 ! Description: A high-performance, OpenMP-accelerated track-structure 
 !              Monte Carlo framework for precision internal alpha dosimetry 
@@ -946,8 +946,12 @@ SUBROUTINE PLOT_RESULTS
     PRINT '(3A)', BLUE // 'Plotting results for ', TRIM(cell_string), ' cells' // RST
 
     DO i = 1, num_cells
-       vol_nuc  = (4.0 / 3.0) * PI * (cells(i)%r_nuc**3)
-       vol_cyto = (4.0 / 3.0) * PI * (cells(i)%r_cyto**3) - vol_nuc
+       !vol_nuc  = (4.0 / 3.0) * PI * (cells(i)%r_nuc**3)
+        !vol_cyto = (4.0 / 3.0) * PI * (cells(i)%r_cyto**3) - vol_nuc
+
+       vol_nuc  = (4.0 / 3.0) * PI * (cells_r_nuc(i)**3)
+       vol_cyto = (4.0 / 3.0) * PI * (cells_r_cyto(i)**3) - vol_nuc
+       
        mass_nuc  = vol_nuc * mat_rho / 1000.0   
        mass_cyto = vol_cyto * mat_rho / 1000.0
 

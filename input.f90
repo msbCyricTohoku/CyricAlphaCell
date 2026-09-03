@@ -1,6 +1,6 @@
 ! ==============================================================================
-! CyricAlphaCell: Cellular Alpha Microdosimetry Monte Carlo
-! Version 1.0.0
+! CyricAlphaCell: Cellular Alpha Microdosimetry Monte Carlo (optimized)
+! Version 1.0.1
 ! ==============================================================================
 ! Description: A high-performance, OpenMP-accelerated track-structure 
 !              Monte Carlo framework for precision internal alpha dosimetry 
@@ -145,23 +145,39 @@ contains
     call read_next_valid_line(105, line)
     read(line, *) num_cells
 
-    allocate(cells(num_cells))
+    !allocate(cells(num_cells))
+    allocate(cells_id(num_cells))
+    allocate(cells_x(num_cells), cells_y(num_cells), cells_z(num_cells))
+    allocate(cells_r_nuc(num_cells), cells_r_cyto(num_cells))
+    allocate(cells_src_prob(num_cells), cells_src_cdf(num_cells))
 
     !print*, num_cells
     !print*, size(cells)
+   allocate(cells_r_nuc_sq(num_cells), cells_r_cyto_sq(num_cells))
     
     cum_prob = 0.0
     do i = 1, num_cells
 
        call read_next_valid_line(105, line)
 
-       read(line, *)  cells(i)%id, cells(i)%x, cells(i)%y, cells(i)%z, &
-                     cells(i)%r_nuc, cells(i)%r_cyto, cells(i)%src_prob
+       !read(line, *)  cells(i)%id, cells(i)%x, cells(i)%y, cells(i)%z, &
+       !     cells(i)%r_nuc, cells(i)%r_cyto, cells(i)%src_prob
+       read(line, *)  cells_id(i), cells_x(i), cells_y(i), cells_z(i), &
+            cells_r_nuc(i), cells_r_cyto(i), cells_src_prob(i)
+
+
+
+
+       !OPTIMIZATION: square at start when read
+       cells_r_nuc_sq(i) = cells_r_nuc(i)**2
+       cells_r_cyto_sq(i) = cells_r_cyto(i)**2
 
        !print*, cells(i)%src_prob
-       cum_prob = cum_prob + cells(i)%src_prob
+       !cum_prob = cum_prob + cells(i)%src_prob
+       cum_prob = cum_prob + cells_src_prob(i)
 
-       cells(i)%src_cdf = cum_prob
+       !cells(i)%src_cdf = cum_prob
+       cells_src_cdf(i) = cum_prob
 
        !print*, cum_prob
     end do
@@ -170,7 +186,8 @@ contains
 
     if (cum_prob > 0.0) then
        do i = 1, num_cells
-          cells(i)%src_cdf = cells(i)%src_cdf / cum_prob
+          !cells(i)%src_cdf = cells(i)%src_cdf / cum_prob
+          cells_src_cdf(i) = cells_src_cdf(i) / cum_prob
           !print*, cells(i)%src_cdf
        end do
     end if

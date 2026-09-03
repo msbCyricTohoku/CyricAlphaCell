@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(cac LANGUAGES Fortran)
 
-# compiler flags
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3 -Wall -g -fopenmp")
+find_package(OpenMP REQUIRED)
 
 add_executable(cac.bin
     types.f90
@@ -16,7 +15,27 @@ add_executable(cac.bin
     main.f90
 )
 
-# explicitly link X11 directly
+target_compile_options(cac.bin PRIVATE
+    -O3
+    -march=native
+    -ffast-math
+    -fno-math-errno
+    -fno-trapping-math
+    -funroll-loops
+    -g
+)
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT ipo_supported)
+if(ipo_supported)
+    set_property(TARGET cac.bin PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+    message(WARNING "IPO/LTO is not supported by this compiler. Falling back to standard linking.")
+endif()
+
+target_link_libraries(cac.bin PRIVATE OpenMP::OpenMP_Fortran)
+
+#explicitly link X11 directly
 target_link_libraries(cac.bin PRIVATE X11)
 # the following dynamic way did not work for me, if needed use the below ones
 #target_link_libraries(cac.bin PRIVATE ${X11_LIBRARIES})
