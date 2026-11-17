@@ -26,6 +26,10 @@ contains
       state = ieor(state, ishft(state, -7))
       state = ieor(state, ishft(state, 17))
       r = real(iand(state, 9007199254740991_8), 8) * 1.1102230246251565e-16_8
+      !note 2^53 -1 = 9,007,199,254,740,991 IEEE754 double pres. float
+      !2^-53 = 1.1102230246251565E-16
+      !i searched and seems to fit cleanly into real(8) we take 53 bits of the state
+      !need to check later as well
     end function rand_dbl
 
 

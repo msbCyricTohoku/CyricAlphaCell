@@ -141,11 +141,16 @@ contains
            d1 = -H_A - sqrt_det_A
            d2 = -H_A + sqrt_det_A
 
-           if (d1 > 1.0e-6 .and. d1 < dbnd) then
-              dbnd = d1
-           else if (d2 > 1.0e-6 .and. d2 < dbnd) then
-              dbnd = d2
-           end if
+           !if (d1 > 1.0e-6 .and. d1 < dbnd) then
+            !  dbnd = d1
+           !else if (d2 > 1.0e-6 .and. d2 < dbnd) then
+           !   dbnd = d2
+           !end if
+            if (d1 > 1.0d-9 .and. d1 < dbnd) then
+                  dbnd = d1
+               else if (d2 > 1.0d-9 .and. d2 < dbnd) then
+                  dbnd = d2
+               end if
              
            !process nuc ONLY if hit cyto
            rad_sq = nrn_sq(i)
@@ -158,11 +163,19 @@ contains
                d1 = -H_A - sqrt_det_A
                d2 = -H_A + sqrt_det_A
 
-               if (d1 > 1.0e-6 .and. d1 < dbnd) then
+               !if (d1 > 1.0e-6 .and. d1 < dbnd) then
+               !   dbnd = d1
+               !else if (d2 > 1.0e-6 .and. d2 < dbnd) then
+               !   dbnd = d2
+               !end if
+
+               if (d1 > 1.0d-9 .and. d1 < dbnd) then
                   dbnd = d1
-               else if (d2 > 1.0e-6 .and. d2 < dbnd) then
+               else if (d2 > 1.0d-9 .and. d2 < dbnd) then
                   dbnd = d2
                end if
+
+               
            end if
        end if
     end do

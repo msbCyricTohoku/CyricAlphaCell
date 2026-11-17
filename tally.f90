@@ -269,36 +269,46 @@ contains
             end do
 
             if (sum_let_dose > 0.0d0) then
-               let_D = let_D / sum_let_dose
+               let_D = let_D / sum_let_dose   !dose average nuclear LET
             else
                let_D = 0.0d0
             end if
             
             if (zF > 0.0d0) then
-                lambda = D_target / zF
-                p0 = exp(-lambda)
+                lambda = D_target / zF !mean traversal
+                p0 = exp(-lambda) !poisson zero hit prob.
             else
                 lambda = 0.0d0; p0 = 1.0d0
             end if
             
-            if (let_D > 0.0d0) then
-                 zD = (0.204d0 * let_D) / (bio_domain_d**2) 
-             end if
+           ! if (let_D > 0.0d0) then
+           !      zD = (0.204d0 * let_D) / (bio_domain_d**2) 
+            ! end if
              
-             z0 = (0.204d0 * 150.0d0) / (bio_domain_d**2)
+            ! z0 = (0.204d0 * 150.0d0) / (bio_domain_d**2)
+            zD = 0.0d0
+            if (let_D > 0.0d0) then
+                 zD = (0.204d0 * let_D) / (mat_rho * (bio_domain_d**2))  !mkm
+            end if
+             
+            z0 = (0.204d0 * 150.0d0) / (mat_rho * (bio_domain_d**2)) !mkm saturation for 150 aka y0
+            
+             
              if (zD > 0.0d0) then
-                 zD_star = (z0**2 / zD) * (1.0d0 - exp(-(zD**2) / z0**2))
+                 zD_star = (z0**2 / zD) * (1.0d0 - exp(-(zD**2) / z0**2))  !saturation corrected
              else
                  zD_star = 0.0d0
              end if
              
-             alpha_alpha = alpha_x + beta_x * zD_star
-             surv = exp(-alpha_alpha * D_target - beta_x * D_target**2)
+             alpha_alpha = alpha_x + beta_x * zD_star  !new alphja
+             
+             surv = exp(-alpha_alpha * D_target - beta_x * D_target**2) !survival frac
 
-            det = alpha_x**2 - 4.0d0 * beta_x * log(max(surv, 1.0d-30))
+             det = alpha_x**2 - 4.0d0 * beta_x * log(max(surv, 1.0d-30)) 
+             
             if (det >= 0.0d0) then
                 D_xray = (-alpha_x + sqrt(det)) / (2.0d0 * beta_x)
-                rbe = D_xray / D_target
+                rbe = D_xray / D_target !rbe calc
             else
                 rbe = 1.0d0
             end if
@@ -312,12 +322,13 @@ contains
     open(92, file=trim(out_dir)//'/microdosimetry_z_spectra.dat', status='replace')
     write(92, '(A)') "# Specific Energy Distribution f1(z) for MKM Micro-Domain"
     write(92, '(A, F6.3, A)') "# Dynamic Target Diameter: ", bio_domain_d, " um"
-    write(92, '(A)') "# z(Gy)    Cell_1_Prob  Cell_2_Prob  Cell_3_Prob ..."
+    write(92, '(A)') "# z(Gy)   Cell_1_f1(Gy^-1)  Cell_2_f1(Gy^-1)  Cell_3_f1(Gy^-1) ..."
     do j = 1, Z_BINS
         write(92, '(ES12.4)', advance='no') (real(j,8)-0.5d0)*dZ_bin
         do i = 1, num_cells
             if (mkm_hit_events(i) > 0.0d0) then
-                write(92, '(ES14.5)', advance='no') mkm_z_hist(j, i) / mkm_hit_events(i)
+               !write(92, '(ES14.5)', advance='no') mkm_z_hist(j, i) / mkm_hit_events(i)
+               write(92, '(ES14.5)', advance='no') mkm_z_hist(j, i) / (mkm_hit_events(i) * dZ_bin)
             else
                 write(92, '(ES14.5)', advance='no') 0.0d0
             end if

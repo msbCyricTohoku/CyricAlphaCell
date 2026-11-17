@@ -50,6 +50,7 @@ contains
 
         print*,  " "
         print*,  " "
+        stop 1
      end if
 
      open(105, file=arg1, status='old', action='read')

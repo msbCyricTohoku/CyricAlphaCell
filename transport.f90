@@ -67,6 +67,8 @@ contains
     end if
     
     c_id = 0
+
+    stp_mean = 0.d0;
     
     do while (p%E > e_cut)
        if (p%record) then
@@ -84,8 +86,10 @@ contains
        
        stp_1 = (1.0d0 - f_interp) * stp_a(idx1) + f_interp * stp_a(idx1+1)  
 
-       ds_max = min(global_ds, dbnd + 1.0e-5_8)
-       stp_limit = max(0.0001d0, 0.05d0 * p%E / max(stp_1, 1.0e-6_8))
+       !ds_max = min(global_ds, dbnd + 1.0e-5_8)
+       ds_max = min(global_ds, dbnd + 1.0d-8)
+       
+       stp_limit = max(1.0d-6, 0.05d0 * p%E / max(stp_1, 1.0e-6_8))
 
        if (ds_max > stp_limit) then
           ds_max = stp_limit
@@ -140,7 +144,9 @@ contains
 
                 end if
 
-               s = sqrt(log(1.0d0 + (var_bohr / (dE_mean*dE_mean)))) 
+                !there was a bug here, the fix belw
+                !s = sqrt(log(1.0d0 + (std_bohr / (dE_mean*dE_mean))))
+                s = sqrt(log(1.0d0 + (std_bohr / dE_mean)**2))
 
                m = log(dE_mean) - 0.5d0 * s*s
 
@@ -161,7 +167,7 @@ contains
         end if
 
         !score arrays and LET spectra
-       if (c_id > 0 .and. c_id <= num_cells) then
+       if (c_id > 0 .and. c_id <= num_cells .and. dE > 0.0d0) then
 
           if (h_dose_nuc(c_id) == 0.0d0 .and. h_dose_cyto(c_id) == 0.0d0) then
               num_hits = num_hits + 1
@@ -192,7 +198,10 @@ contains
     end do
     !---------------------------------------
     
-    if (p%E > 0.0d0 .and. c_id > 0 .and. c_id <= num_cells) then
+    !if (p%E > 0.0d0 .and. c_id > 0 .and. c_id <= num_cells) then
+    if (p%E > 0.0d0) then
+       call get_cell_location(p%x, p%y, p%z, c_id, region)
+       if (c_id > 0 .and. c_id <= num_cells) then
        if (h_dose_nuc(c_id) == 0.0d0 .and. h_dose_cyto(c_id) == 0.0d0) then
           
            num_hits = num_hits + 1
@@ -211,6 +220,8 @@ contains
        call score_tally(c_id, region, p%E, 0.0d0, p%E, stp_mean, t_id)
        
     end if
+    end if
+    
 !---------------------------------------
     
   end subroutine transport_particle

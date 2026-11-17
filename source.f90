@@ -29,6 +29,8 @@ contains
     real(8) :: r1
     real(8) ::  r2
     real(8) ::  r3
+    real(8) ::  r4
+     real(8) ::  r5
     real(8) ::  r_rad
     real(8) ::  costh
     real(8) ::  phi
@@ -93,12 +95,12 @@ contains
     !call random_number(r1)
     !call random_number(r2)
 
-    r1 = rand_dbl(rng_state)
-    r2 = rand_dbl(rng_state)
+    r4 = rand_dbl(rng_state)
+    r5 = rand_dbl(rng_state)
 
-    costh = 2.0d0 * r1 - 1.0d0 !same sampling here for unit vectors
+    costh = 2.0d0 * r4 - 1.0d0 !same sampling here for unit vectors
     
-    phi   = TWO_PI * r2
+    phi   = TWO_PI * r5
 
     !here we sample direction unit vectors, do not multiply by radius just sampling (fixed the issue, done!)
     p%u = sqrt(max(0.0d0, 1.0d0 - costh**2)) * cos(phi)

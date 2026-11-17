@@ -21,7 +21,7 @@ module TYPES_MOD
   integer, parameter :: NUM_EBINS = 200
   integer, parameter :: Z_BINS = 2000
   integer, parameter :: LET_BINS = 300
-  real, parameter    :: Z_MAX_GY = 1000.0 !change since now we score microdomain
+  real(8), parameter    :: Z_MAX_GY = 1000.0 !change since now we score microdomain
   real(8), parameter    :: LET_MAX_KEV = 300.0 
 !--------------------------------------
   INTEGER :: SVG_PLOT_CHECK   !for my custom cacplotter

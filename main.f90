@@ -32,7 +32,8 @@ program ben
   integer :: clock
   integer :: t_id
   integer :: n_threads
-  integer :: hit_cells(500)
+  !integer :: hit_cells(500)
+  integer, allocatable :: hit_cells(:)
   integer :: num_hits
   integer :: h_idx
   integer(8) :: rng_state
@@ -72,6 +73,7 @@ program ben
 
   allocate(h_dose_nuc(num_cells))
   allocate(h_dose_cyto(num_cells))
+  allocate(hit_cells(num_cells))
   h_dose_nuc = 0.0d0
   h_dose_cyto = 0.0d0
 
@@ -117,7 +119,8 @@ program ben
   end do
   !$omp end do
 
-  deallocate(h_dose_nuc, h_dose_cyto)
+  !deallocate(h_dose_nuc, h_dose_cyto)
+  deallocate(h_dose_nuc, h_dose_cyto, hit_cells)
 
   !$omp end parallel
 
