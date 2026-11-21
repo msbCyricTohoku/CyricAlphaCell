@@ -19,7 +19,9 @@ program ben
   use source_mod
   use tally_mod
   use transport_mod
+#ifdef HAVE_X11
   use cacplotter
+#endif
   implicit none
 
   integer :: i
@@ -131,7 +133,15 @@ program ben
   call write_tallies(nps_total)
   print *, "***** RUN DONE *****"
 
-  if(SVG_PLOT_CHECK /= 0 .OR. RENDER_PLOT_CHECK /=0) call plot_results
+  if (SVG_PLOT_CHECK /= 0 .or. RENDER_PLOT_CHECK /= 0) then
+#ifdef HAVE_X11
+    call plot_results()
+#else
+    print *, ">> WARNING: Plotting enabled in config, but cac.bin was built without X11 support. Skipping plot_results."
+#endif
+  end if
+
+  !if(SVG_PLOT_CHECK /= 0 .OR. RENDER_PLOT_CHECK /=0) call plot_results
 
 end program ben
 
