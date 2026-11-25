@@ -1,0 +1,3265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyricAlphaCell (C.A.C) Studio</title>
+<style>
+:root {
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --surface-alt: #f8fafc;
+    --header-bg: #0f172a;
+    --header-text: #f8fafc;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --primary: #e11d48;
+    --primary-hover: #be123c;
+    --primary-soft: #ffe4e6;
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --success: #059669;
+    --success-soft: #d1fae5;
+    --warn: #d97706;
+    --warn-soft: #fef3c7;
+    --danger: #dc2626;
+    --danger-soft: #fee2e2;
+    --radius: 8px;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.12);
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+}
+
+header {
+    height: 54px;
+    background: var(--header-bg);
+    color: var(--header-text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    gap: 12px;
+    flex-shrink: 0;
+    border-bottom: 1px solid #1e293b;
+    z-index: 30;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-mark {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f43f5e, #9f1239);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: -0.03em;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(244, 63, 94, 0.35);
+}
+
+.brand-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.brand-title strong {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.brand-title span {
+    font-size: 10.5px;
+    color: #94a3b8;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.header-select {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+}
+
+.header-select:hover { border-color: #64748b; }
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-sm { padding: 5px 9px; font-size: 11.5px; }
+.btn-xs { padding: 3px 7px; font-size: 11px; }
+
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+
+.btn-dark { background: #1e293b; color: #f8fafc; border-color: #334155; }
+.btn-dark:hover:not(:disabled) { background: #334155; }
+
+.btn-outline { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+.btn-outline:hover:not(:disabled) { background: var(--surface-alt); border-color: #94a3b8; }
+
+.btn-solid { background: #0f172a; color: #fff; }
+.btn-solid:hover:not(:disabled) { background: #1e293b; }
+
+.btn-danger-outline { background: var(--surface); color: var(--danger); border-color: #fca5a5; }
+.btn-danger-outline:hover:not(:disabled) { background: var(--danger-soft); }
+
+.btn-accent-soft { background: var(--accent-soft); color: #1d4ed8; border-color: #bfdbfe; }
+.btn-accent-soft:hover:not(:disabled) { background: #bfdbfe; }
+
+.workspace {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    position: relative;
+}
+
+#sidebar {
+    width: 396px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    z-index: 15;
+}
+
+.tab-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+    padding: 6px;
+    gap: 4px;
+}
+
+.tab-btn {
+    border: none;
+    background: transparent;
+    padding: 8px 4px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tab-btn:hover { color: var(--text); background: #e2e8f0; }
+
+.tab-btn.active {
+    background: var(--surface);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-panel {
+    display: none;
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tab-panel.active { display: flex; }
+
+.card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.card-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #334155;
+    margin: 0;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.field-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.field-row > .label-wrap { flex: 1.15; }
+.field-row > .input-wrap { flex: 1; display: flex; align-items: center; gap: 6px; }
+
+.label-wrap {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.help-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: help;
+    flex-shrink: 0;
+    user-select: none;
+    transition: background 0.15s, color 0.15s;
+}
+
+.help-dot:hover { background: var(--accent); color: #fff; }
+
+input[type="text"], input[type="number"], select.field-select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+select.field-select { font-family: var(--font-sans); cursor: pointer; }
+
+input:focus, select.field-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+input[readonly] { background: #e2e8f0; color: #475569; }
+
+.unit-tag {
+    font-size: 10.5px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.row { display: flex; gap: 8px; align-items: center; }
+.flex-1 { flex: 1; }
+
+.toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch input { display: none; }
+
+.toggle-track {
+    width: 36px;
+    height: 20px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    position: relative;
+    transition: background 0.2s;
+}
+
+.toggle-track::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-track { background: var(--success); }
+.toggle-switch input:checked + .toggle-track::after { transform: translateX(16px); }
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.pill-ok { background: var(--success-soft); color: #065f46; }
+.pill-warn { background: var(--warn-soft); color: #92400e; }
+.pill-err { background: var(--danger-soft); color: #991b1b; }
+.pill-info { background: var(--accent-soft); color: #1e40af; }
+
+.metric-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.metric-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.metric-box span { font-size: 10.5px; color: var(--text-muted); }
+.metric-box strong { font-size: 13px; font-family: var(--font-mono); color: var(--text); }
+
+.preset-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.chip {
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    font-size: 11px;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+.cell-list-wrap {
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+}
+
+.cell-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-family: var(--font-mono);
+}
+
+.cell-table th {
+    position: sticky;
+    top: 0;
+    background: #f1f5f9;
+    text-align: left;
+    padding: 5px 6px;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.cell-table td {
+    padding: 5px 6px;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+}
+
+.cell-table tr:hover td { background: #f8fafc; }
+.cell-table tr.selected td { background: var(--primary-soft); color: #881337; font-weight: 700; }
+
+#viewport-area {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+.welcome-banner {
+    background: linear-gradient(90deg, #eff6ff, #fff1f2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12px;
+    color: #1e293b;
+}
+
+.welcome-banner.hidden { display: none; }
+
+.viewport-toolbar {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    pointer-events: none;
+    z-index: 10;
+    flex-wrap: wrap;
+}
+
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(8px);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    pointer-events: auto;
+}
+
+.view-btn {
+    border: none;
+    background: transparent;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.view-btn:hover { background: #f1f5f9; color: var(--text); }
+.view-btn.active { background: #0f172a; color: #fff; }
+
+.slice-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    font-size: 11px;
+    color: #334155;
+    font-weight: 600;
+}
+
+.slice-control input[type="range"] { width: 88px; accent-color: var(--primary); }
+
+#canvas-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+}
+
+#canvas-wrap.dragging { cursor: grabbing; }
+#canvas-wrap.drag-over { outline: 3px dashed var(--accent); outline-offset: -8px; background: #eff6ff; }
+
+#main-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.status-bar {
+    height: 34px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.status-left, .status-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mono { font-family: var(--font-mono); }
+
+#inspector {
+    width: 295px;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    gap: 12px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    z-index: 12;
+}
+
+.empty-inspector {
+    margin: auto 0;
+    text-align: center;
+    padding: 20px 10px;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.empty-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-alt);
+    border: 1px dashed var(--border-strong);
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    color: #94a3b8;
+}
+
+.legend-card {
+    margin-top: auto;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.swatch { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+#tooltip {
+    position: fixed;
+    max-width: 290px;
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 9px 11px;
+    border-radius: 7px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    box-shadow: var(--shadow-md);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.14s ease, transform 0.14s ease;
+    z-index: 1000;
+    border: 1px solid #334155;
+}
+
+#tooltip.visible { opacity: 1; transform: translateY(0); }
+
+#toast-container {
+    position: fixed;
+    bottom: 46px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 900;
+    pointer-events: none;
+}
+
+.toast {
+    background: #0f172a;
+    color: #fff;
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--accent);
+    animation: fadeSlide 0.2s ease;
+}
+
+.toast.error { border-left-color: var(--danger); }
+.toast.success { border-left-color: var(--success); }
+.toast.warn { border-left-color: var(--warn); }
+
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.58);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    padding: 20px;
+}
+
+.modal-backdrop.open { display: flex; }
+
+.modal {
+    background: var(--surface);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 780px;
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.3);
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface-alt);
+}
+
+.modal-header h3 { margin: 0; font-size: 15px; font-weight: 700; }
+
+.modal-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 8px 18px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-alt);
+}
+
+.modal-tab {
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.modal-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+.modal-body {
+    padding: 18px;
+    overflow-y: auto;
+    line-height: 1.6;
+    font-size: 13px;
+    color: #334155;
+}
+
+.modal-section { display: none; }
+.modal-section.active { display: block; }
+
+.modal-body h4 { margin: 14px 0 6px; font-size: 13.5px; color: var(--text); }
+.modal-body h4:first-child { margin-top: 0; }
+.modal-body p { margin: 0 0 10px; }
+.modal-body ul, .modal-body ol { margin: 0 0 12px; padding-left: 20px; }
+.modal-body li { margin-bottom: 4px; }
+
+.eq-box {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--primary);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #0f172a;
+    margin: 8px 0 12px;
+    white-space: pre-wrap;
+}
+
+.code-preview {
+    width: 100%;
+    height: 420px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    resize: none;
+    line-height: 1.5;
+}
+
+.modal-footer {
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: var(--surface-alt);
+}
+
+.kbd {
+    display: inline-block;
+    padding: 1px 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: #e2e8f0;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    color: #0f172a;
+}
+
+@media (max-width: 1120px) {
+    #sidebar { width: 340px; }
+    #inspector { width: 260px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="brand">
+        <div class="brand-mark">CAC</div>
+        <div class="brand-title">
+            <strong>CyricAlphaCell Studio</strong>
+            <span>v1.0.0 · RARiS (CYRIC) Tohoku University · 3D Input Configurator</span>
+        </div>
+    </div>
+
+    <div class="header-controls">
+        <select id="template-select" class="header-select" title="Load a built-in benchmark case or starter geometry">
+            <option value="">Load Example Case...</option>
+            <option value="starter">Starter: 19-Cell Hex Monolayer (Water, 5.3 MeV)</option>
+            <option value="case1">Case 1: 33-Cell 3D Tumor Spheroid (Ac-225 TAT)</option>
+            <option value="case2">Case 2: 89-Cell 3D Bronchial Wall (Po-214 Radon)</option>
+            <option value="case3">Case 3: 43-Cell 3D Adipocyte-Stem Niche (Po-210)</option>
+        </select>
+        <input type="file" id="import-file-input" accept=".i,.txt,.inp" style="display:none;">
+        <button class="btn btn-dark" id="import-btn">Import .i</button>
+        <button class="btn btn-dark" id="manual-btn">User Manual</button>
+        <button class="btn btn-dark" id="preview-btn">Preview .i</button>
+        <button class="btn btn-primary" id="export-btn">Export .i File</button>
+    </div>
+</header>
+
+<div class="workspace">
+    <aside id="sidebar">
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="tab-physics">Physics</button>
+            <button class="tab-btn" data-tab="tab-source">Source</button>
+            <button class="tab-btn" data-tab="tab-bio">Bio (MKM)</button>
+            <button class="tab-btn" data-tab="tab-colony">Colony</button>
+        </div>
+
+        <div id="tab-physics" class="tab-panel active">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Monte Carlo Transport</h4>
+                    <span class="pill pill-info">CSDA Engine</span>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>nps_total</span>
+                        <span class="help-dot" data-help="Total number of primary alpha particle histories to simulate. Higher values reduce statistical noise (e.g., 100,000 for quick tests; 2,000,000 to 40,000,000 for publication-grade 3D statistics).">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="number" id="cfg-nps" value="100000" min="1" step="10000">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>global_ds</span>
+                        <span class="help-dot" data-help="Maximum CSDA transport step length in centimeters. Default 1.0e-4 cm equals 1.0 µm. Smaller steps increase boundary precision at higher CPU cost.">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="text" id="cfg-ds" value="1.0e-4">
+                        <span class="unit-tag" id="ds-um-tag">1.0 µm</span>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>e_cut</span>
+                        <span class="help-dot" data-help="Kinetic energy cutoff in MeV below which alpha transport terminates and remaining energy is deposited locally. Default 0.01 MeV (10 keV).">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="number" id="cfg-ecut" value="0.01" min="0.0001" step="0.005">
+                        <span class="unit-tag">MeV</span>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>use_straggling</span>
+                        <span class="help-dot" data-help="Enables randomized Bohr energy-loss straggling sampled from a bounded Lognormal-Gaussian distribution (1 = On, 0 = Pure deterministic CSDA).">?</span>
+                    </div>
+                    <div class="input-wrap" style="justify-content:flex-end;">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="cfg-straggle" checked>
+                            <span class="toggle-track"></span>
+                            <span class="mono" id="straggle-label">1 (On)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>max_tracks</span>
+                        <span class="help-dot" data-help="Maximum number of particle trajectories written to tracks.dat for visualization. Keep around 300–500 to prevent huge track files.">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="number" id="cfg-tracks" value="500" min="0" step="50">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>output dir</span>
+                        <span class="help-dot" data-help="Target directory where C.A.C saves cellular_dosimetry.dat, radiobiology_rbe.dat, spectra, tracks.dat, and SVG plots. Must contain no spaces.">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="text" id="cfg-out" value="output">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Native Plotting Options</h4>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>save SVG</span>
+                        <span class="help-dot" data-help="Writes native vector graphics (*.svg) plots into the output directory at the end of the run (1 = On, 0 = Off).">?</span>
+                    </div>
+                    <div class="input-wrap" style="justify-content:flex-end;">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="cfg-savesvg" checked>
+                            <span class="toggle-track"></span>
+                            <span class="mono" id="savesvg-label">1 (On)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>render window</span>
+                        <span class="help-dot" data-help="Opens an interactive X11 graphics window during execution (1 = On, 0 = Off). Keep Off (0) on headless clusters or HPC nodes.">?</span>
+                    </div>
+                    <div class="input-wrap" style="justify-content:flex-end;">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="cfg-renderwin">
+                            <span class="toggle-track"></span>
+                            <span class="mono" id="renderwin-label">0 (Off)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-source" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Alpha Source Configuration</h4>
+                </div>
+
+                <div class="field">
+                    <div class="label-wrap">
+                        <span>src_mode</span>
+                        <span class="help-dot" data-help="Mode 1 emits isotropic alpha particles from a fixed 3D point (src_x, src_y, src_z). Mode 2 samples emission uniformly inside cell nuclei weighted by each cell's Source_Probability.">?</span>
+                    </div>
+                    <select id="cfg-srcmode" class="field-select">
+                        <option value="2">2 — Distributed inside Cell Nuclei</option>
+                        <option value="1">1 — Fixed 3D Point Source</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <div class="label-wrap">
+                        <span>Quick Radionuclide Presets</span>
+                    </div>
+                    <div class="preset-chips">
+                        <button class="chip" data-e0="5.30">Po-210 (5.30 MeV)</button>
+                        <button class="chip" data-e0="5.83">Ac-225 (5.83 MeV)</button>
+                        <button class="chip" data-e0="7.69">Po-214 (7.69 MeV)</button>
+                        <button class="chip" data-e0="5.49">Rn-222 (5.49 MeV)</button>
+                        <button class="chip" data-e0="6.00">Po-218 (6.00 MeV)</button>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>src_E0</span>
+                        <span class="help-dot" data-help="Initial kinetic energy of emitted alpha particles in MeV. Typical natural/therapeutic alpha emitters range from 4.0 to 8.8 MeV.">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="number" id="cfg-srce0" value="5.3" min="0.1" max="20" step="0.01">
+                        <span class="unit-tag">MeV</span>
+                    </div>
+                </div>
+
+                <div id="point-source-box" class="field" style="display:none; padding-top:4px; border-top:1px solid var(--border);">
+                    <div class="label-wrap">
+                        <span>Point Source Coordinates (cm)</span>
+                        <span class="help-dot" data-help="3D position (src_x, src_y, src_z) in cm used when src_mode = 1. You can also drag the golden star directly in any 2D viewport plane.">?</span>
+                    </div>
+                    <div class="grid-3">
+                        <div class="field">
+                            <span class="unit-tag">X (cm)</span>
+                            <input type="text" id="cfg-srcx" value="0.0">
+                        </div>
+                        <div class="field">
+                            <span class="unit-tag">Y (cm)</span>
+                            <input type="text" id="cfg-srcy" value="0.0">
+                        </div>
+                        <div class="field">
+                            <span class="unit-tag">Z (cm)</span>
+                            <input type="text" id="cfg-srcz" value="0.0">
+                        </div>
+                    </div>
+                    <div class="unit-tag" id="src-xyz-um">Position: (0.0, 0.0, 0.0) µm</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Transport Medium & Stopping Power</h4>
+                </div>
+
+                <div class="field">
+                    <div class="label-wrap">
+                        <span>ICRU-49 Material Presets</span>
+                        <span class="help-dot" data-help="Auto-populates NIST/ICRU stopping power file path, density (rho_mat), effective atomic number (Z_eff), and effective mass (A_eff) for Bohr straggling.">?</span>
+                    </div>
+                    <div class="preset-chips">
+                        <button class="chip" data-mat="water">Liquid Water</button>
+                        <button class="chip" data-mat="muscle">Skeletal Muscle / Tumor</button>
+                        <button class="chip" data-mat="adipose">Adipose Tissue</button>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label-wrap">
+                        <span>Stopping Power File (.dedx)</span>
+                        <span class="help-dot" data-help="Relative or absolute path to the NIST ASTAR stopping power table read by C.A.C. Must contain no spaces.">?</span>
+                    </div>
+                    <input type="text" id="cfg-dedx" value="data/water_liquid.dedx">
+                </div>
+
+                <div class="grid-3">
+                    <div class="field">
+                        <div class="label-wrap">
+                            <span>rho_mat</span>
+                            <span class="help-dot" data-help="Material mass density in g/cm³ (e.g., 1.00 water, 1.04 skeletal muscle, 0.92 adipose tissue).">?</span>
+                        </div>
+                        <input type="number" id="cfg-rho" value="1.0" min="0.01" step="0.01">
+                    </div>
+                    <div class="field">
+                        <div class="label-wrap">
+                            <span>Z_eff</span>
+                            <span class="help-dot" data-help="Effective atomic number of the medium used in Bohr straggling variance calculation.">?</span>
+                        </div>
+                        <input type="number" id="cfg-zeff" value="10.0" min="1" step="0.01">
+                    </div>
+                    <div class="field">
+                        <div class="label-wrap">
+                            <span>A_eff</span>
+                            <span class="help-dot" data-help="Effective atomic or molecular mass number corresponding to Z_eff.">?</span>
+                        </div>
+                        <input type="number" id="cfg-aeff" value="18.015" min="1" step="0.005">
+                    </div>
+                </div>
+
+                <div class="metric-strip">
+                    <div class="metric-box">
+                        <span>Z_eff / A_eff Ratio</span>
+                        <strong id="metric-za">0.5551</strong>
+                    </div>
+                    <div class="metric-box">
+                        <span>Approx. Alpha Range</span>
+                        <strong id="metric-range">~40 µm</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-bio" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Radiobiology (MKM Model)</h4>
+                </div>
+
+                <div class="field">
+                    <div class="label-wrap">
+                        <span>Tissue Radiosensitivity Presets</span>
+                    </div>
+                    <div class="preset-chips">
+                        <button class="chip" data-bio="default">Standard (a/b=9 Gy)</button>
+                        <button class="chip" data-bio="tumor">Solid Tumor (a/b=5 Gy)</button>
+                        <button class="chip" data-bio="bronchial">Bronchial (a/b=10 Gy)</button>
+                        <button class="chip" data-bio="stem">Stem Niche (a/b=10 Gy)</button>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>Domain 'd'</span>
+                        <span class="help-dot" data-help="Sub-nuclear microdosimetric domain diameter in µm for the Microdosimetric Kinetic Model. Standard value for alpha particles is 0.5 µm.">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="number" id="cfg-mkm-d" value="0.5" min="0.05" step="0.05">
+                        <span class="unit-tag">µm</span>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>Ref Target Dose</span>
+                        <span class="help-dot" data-help="Reference macroscopic dose in Gy used to evaluate Relative Biological Effectiveness (RBE) and survival fraction comparisons.">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="number" id="cfg-mkm-dose" value="2.0" min="0.01" step="0.1">
+                        <span class="unit-tag">Gy</span>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>X-ray alpha_X</span>
+                        <span class="help-dot" data-help="Linear LQ survival parameter for reference low-LET X-ray irradiation in Gy^-1.">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="number" id="cfg-mkm-alpha" value="0.18" min="0.001" step="0.01">
+                        <span class="unit-tag">Gy⁻¹</span>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>X-ray beta_X</span>
+                        <span class="help-dot" data-help="Quadratic LQ survival parameter for reference X-ray irradiation in Gy^-2. Governs the MKM high-LET sensitivity increase via alpha = alpha_X + beta_X * z_D*.">?</span>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="number" id="cfg-mkm-beta" value="0.02" min="0.0001" step="0.005">
+                        <span class="unit-tag">Gy⁻²</span>
+                    </div>
+                </div>
+
+                <div class="metric-strip">
+                    <div class="metric-box">
+                        <span>Reference alpha/beta</span>
+                        <strong id="metric-ab">9.00 Gy</strong>
+                    </div>
+                    <div class="metric-box">
+                        <span>X-ray Survival @ Ref D</span>
+                        <strong id="metric-sx">64.4%</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-colony" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Default New Cell Radii</h4>
+                    <span class="pill pill-ok">3D Guard Active</span>
+                </div>
+
+                <div class="grid-2">
+                    <div class="field">
+                        <div class="label-wrap">
+                            <span>R_nuc (cm)</span>
+                            <span class="help-dot" data-help="Default nuclear radius in cm for newly added or generated cells (e.g., 5.0e-4 cm = 5.0 µm). Must be strictly less than R_cyto.">?</span>
+                        </div>
+                        <input type="text" id="global-rnuc" value="5.0e-4">
+                        <span class="unit-tag" id="def-rnuc-um">5.00 µm</span>
+                    </div>
+                    <div class="field">
+                        <div class="label-wrap">
+                            <span>R_cyto (cm)</span>
+                            <span class="help-dot" data-help="Default outer cytoplasmic radius in cm (e.g., 1.0e-3 cm = 10.0 µm). Overlap prevention strictly protects this 3D sphere.">?</span>
+                        </div>
+                        <input type="text" id="global-rcyto" value="1.0e-3">
+                        <span class="unit-tag" id="def-rcyto-um">10.00 µm</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <button id="add-cell-btn" class="btn btn-solid flex-1">+ Add Single Cell</button>
+                    <button id="clear-all-btn" class="btn btn-danger-outline">Clear All</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">2D / 3D Colony Generator</h4>
+                    <span class="help-dot" data-help="Generates or rearranges cells into strictly non-overlapping 2D or 3D packings with your specified membrane-to-membrane clearance gap.">?</span>
+                </div>
+
+                <div class="grid-2">
+                    <div class="field">
+                        <span class="unit-tag">Target Cell Count</span>
+                        <input type="number" id="gen-count" value="19" min="1" max="500">
+                    </div>
+                    <div class="field">
+                        <span class="unit-tag">Min Gap (µm)</span>
+                        <input type="number" id="gen-gap" value="0.5" min="0.05" step="0.1">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <button class="btn btn-outline btn-sm gen-btn" data-layout="hex2d">2D Hex Grid</button>
+                    <button class="btn btn-outline btn-sm gen-btn" data-layout="square2d">2D Square Grid</button>
+                    <button class="btn btn-outline btn-sm gen-btn" data-layout="circle2d">2D Ring</button>
+                    <button class="btn btn-outline btn-sm gen-btn" data-layout="line1d">1D Line (X)</button>
+                    <button class="btn btn-accent-soft btn-sm gen-btn" data-layout="hcp3d">3D HCP Spheroid</button>
+                    <button class="btn btn-accent-soft btn-sm gen-btn" data-layout="cubic3d">3D Cubic Lattice</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Source Probabilities</h4>
+                    <span id="prob-sum-badge" class="pill pill-ok">Sum: 1.000</span>
+                </div>
+                <div class="row">
+                    <button id="prob-norm-btn" class="btn btn-outline btn-xs flex-1">Normalize to 1.0</button>
+                    <button id="prob-center-btn" class="btn btn-outline btn-xs flex-1">Cell #1 Only</button>
+                    <button id="prob-uniform-btn" class="btn btn-outline btn-xs flex-1">Uniform All</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Cell Roster (<span id="roster-count">0</span>)</h4>
+                    <span class="unit-tag">Click row to select</span>
+                </div>
+                <div class="cell-list-wrap">
+                    <table class="cell-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>X,Y,Z (µm)</th>
+                                <th>Rc (µm)</th>
+                                <th>Prob</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cell-roster-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main id="viewport-area">
+        <div id="welcome-banner" class="welcome-banner">
+            <div>
+                <strong>Welcome to C.A.C Studio:</strong> Load an example case above, generate a 2D/3D colony under <em>Colony</em>, or hover any <strong>?</strong> icon for physics guidance. Strictly zero 3D overlaps are guaranteed.
+            </div>
+            <button id="dismiss-welcome" class="btn btn-outline btn-xs">Got it</button>
+        </div>
+
+        <div id="canvas-wrap">
+            <div class="viewport-toolbar">
+                <div class="toolbar-group">
+                    <button class="view-btn active" data-view="xy">XY (Top)</button>
+                    <button class="view-btn" data-view="xz">XZ (Front)</button>
+                    <button class="view-btn" data-view="yz">YZ (Side)</button>
+                    <button class="view-btn" data-view="3d">3D Orbit</button>
+                </div>
+
+                <div class="toolbar-group" id="slice-group">
+                    <div class="slice-control">
+                        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+                            <input type="checkbox" id="slice-enable">
+                            <span id="slice-axis-label">Z-Slice</span>
+                        </label>
+                        <input type="range" id="slice-slider" min="-60" max="60" value="0" step="1" disabled>
+                        <span id="slice-val" class="mono">All</span>
+                    </div>
+                </div>
+
+                <div class="toolbar-group">
+                    <button class="view-btn" id="undo-btn" title="Undo (Ctrl+Z)">Undo</button>
+                    <button class="view-btn" id="redo-btn" title="Redo (Ctrl+Y)">Redo</button>
+                    <button class="view-btn active" id="toggle-ids-btn">IDs</button>
+                    <button class="view-btn active" id="toggle-grid-btn">Grid</button>
+                    <button class="view-btn" id="fit-view-btn">Fit View</button>
+                </div>
+            </div>
+
+            <canvas id="main-canvas"></canvas>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-left">
+                <span>Cells: <strong id="status-cells" class="mono">0</strong></span>
+                <span id="status-overlap" class="pill pill-ok">0 Overlaps · 3D Guard</span>
+                <span id="status-source" class="mono">Mode 2 (Nuclei)</span>
+            </div>
+            <div class="status-right">
+                <span id="status-cursor" class="mono">Cursor: 0.0, 0.0 µm</span>
+                <span id="status-hint">Drag cell to move · Scroll to zoom · Drag empty space to pan</span>
+            </div>
+        </div>
+    </main>
+
+    <aside id="inspector">
+        <div class="card-header">
+            <h4 class="card-title">Cell Inspector</h4>
+            <span id="inspector-badge" class="pill pill-info" style="display:none;">ID #1</span>
+        </div>
+
+        <div id="empty-inspector" class="empty-inspector">
+            <div class="empty-icon">◎</div>
+            <div><strong>No Cell Selected</strong></div>
+            <div style="font-size:12px;">Click any cell in the viewport or roster to inspect its 3D coordinates, radii, nearest-neighbor clearance, and source probability.</div>
+        </div>
+
+        <div id="cell-editor" style="display:none; flex-direction:column; gap:10px;">
+            <div class="metric-strip">
+                <div class="metric-box">
+                    <span>Nearest Neighbor Gap</span>
+                    <strong id="edit-gap">—</strong>
+                </div>
+                <div class="metric-box">
+                    <span>Distance from Origin</span>
+                    <strong id="edit-dist0">—</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">3D Position (cm)</div>
+                <div class="field-row">
+                    <div class="label-wrap"><span>X</span><span class="unit-tag" id="edit-x-um">0 µm</span></div>
+                    <div class="input-wrap"><input type="text" id="edit-x"></div>
+                </div>
+                <div class="field-row">
+                    <div class="label-wrap"><span>Y</span><span class="unit-tag" id="edit-y-um">0 µm</span></div>
+                    <div class="input-wrap"><input type="text" id="edit-y"></div>
+                </div>
+                <div class="field-row">
+                    <div class="label-wrap"><span>Z</span><span class="unit-tag" id="edit-z-um">0 µm</span></div>
+                    <div class="input-wrap"><input type="text" id="edit-z"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Spherical Geometry (cm)</div>
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>R_nuc</span>
+                        <span class="unit-tag" id="edit-rnuc-um">5 µm</span>
+                    </div>
+                    <div class="input-wrap"><input type="text" id="edit-rnuc"></div>
+                </div>
+                <div class="field-row">
+                    <div class="label-wrap">
+                        <span>R_cyto</span>
+                        <span class="unit-tag" id="edit-rcyto-um">10 µm</span>
+                    </div>
+                    <div class="input-wrap"><input type="text" id="edit-rcyto"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Source Probability</div>
+                    <span class="help-dot" data-help="Relative emission probability (0.0 to 1.0) inside this cell's nucleus when src_mode = 2. Supports fractional weights like 0.05 or 0.40.">?</span>
+                </div>
+                <div class="row">
+                    <input type="range" id="edit-prob-range" min="0" max="1" step="0.01" style="flex:1; accent-color: var(--primary);">
+                    <input type="number" id="edit-prob" min="0" max="1" step="0.01" style="width:74px;">
+                </div>
+                <div class="row">
+                    <button class="btn btn-outline btn-xs flex-1 prob-quick" data-val="0">0.0</button>
+                    <button class="btn btn-outline btn-xs flex-1 prob-quick" data-val="0.05">0.05</button>
+                    <button class="btn btn-outline btn-xs flex-1 prob-quick" data-val="0.5">0.5</button>
+                    <button class="btn btn-outline btn-xs flex-1 prob-quick" data-val="1">1.0</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <button id="apply-cell-btn" class="btn btn-solid flex-1">Apply</button>
+                <button id="clone-cell-btn" class="btn btn-outline">Clone</button>
+                <button id="delete-cell-btn" class="btn btn-danger-outline">Delete</button>
+            </div>
+        </div>
+
+        <div class="legend-card">
+            <strong style="color:var(--text); font-size:11.5px;">Viewport Legend</strong>
+            <div class="legend-item"><span class="swatch" style="background:rgba(148,163,184,0.35); border:1.5px solid #475569;"></span> Cytoplasm Sphere (R_cyto)</div>
+            <div class="legend-item"><span class="swatch" style="background:#475569;"></span> Unlabeled Nucleus (Prob = 0)</div>
+            <div class="legend-item"><span class="swatch" style="background:#e11d48;"></span> Active Source Nucleus (Prob > 0)</div>
+            <div class="legend-item"><span class="swatch" style="background:#f59e0b; border:1.5px solid #b45309;"></span> Point Source (src_mode = 1)</div>
+        </div>
+    </aside>
+</div>
+
+<div id="tooltip"></div>
+<div id="toast-container"></div>
+
+<div id="manual-modal" class="modal-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>CyricAlphaCell (C.A.C) v1.0.0 — User Manual & Physics Reference</h3>
+            <button class="btn btn-outline btn-sm close-modal" data-target="manual-modal">Close</button>
+        </div>
+        <div class="modal-tabs">
+            <button class="modal-tab active" data-msect="m-quick">Quick Start</button>
+            <button class="modal-tab" data-msect="m-physics">Core Physics & MKM</button>
+            <button class="modal-tab" data-msect="m-format">Input & Output Files</button>
+            <button class="modal-tab" data-msect="m-keys">Controls & Shortcuts</button>
+        </div>
+        <div class="modal-body">
+            <div id="m-quick" class="modal-section active">
+                <h4>Getting Started in 4 Steps</h4>
+                <ol>
+                    <li><strong>Configure Physics & Medium:</strong> Open the <em>Physics</em> and <em>Source</em> tabs to set particle histories (<code>nps_total</code>), alpha energy (<code>src_E0</code>), and ICRU tissue parameters (<code>.dedx</code>, <code>rho_mat</code>, <code>Z_eff</code>, <code>A_eff</code>).</li>
+                    <li><strong>Set MKM Radiobiology:</strong> In <em>Bio (MKM)</em>, set the micro-domain diameter <code>d</code> (typically <code>0.5 µm</code> for alpha particles) and reference X-ray <code>alpha_X</code>, <code>beta_X</code> values.</li>
+                    <li><strong>Design Your 3D Cellular Colony:</strong> Use the <em>Colony</em> tab to generate 2D/3D lattices (Hex, Square, Ring, Line, 3D HCP Spheroid, 3D Cubic) or load one of the three built-in benchmark cases. Drag cells across XY, XZ, or YZ planes and inspect in 3D Orbit view.</li>
+                    <li><strong>Export & Run C.A.C:</strong> Click <strong>Export .i File</strong> to download <code>inputs.i</code>, then run:</li>
+                </ol>
+                <div class="eq-box">$ ./cac.bin inputs.i</div>
+                <h4>Strict 3D Non-Overlap Rule</h4>
+                <p>C.A.C requires strictly disjoint cytoplasmic spheres in 3D space. This configurator enforces a minimum center-to-center distance of <code>1.001 × (R_cyto,i + R_cyto,j)</code> during dragging, editing, generation, and file import. When dragging into another cell, your cell slides cleanly along the boundary without penetrating it.</p>
+            </div>
+
+            <div id="m-physics" class="modal-section">
+                <h4>Particle Transport & Bohr Straggling</h4>
+                <p>CyricAlphaCell transports alpha particles via the Continuous-Slowing-Down Approximation (CSDA) interpolated from NIST ASTAR stopping power tables, coupled with randomized energy-loss straggling sampled from a bounded Lognormal-Gaussian distribution:</p>
+                <div class="eq-box">sigma_Bohr^2 = 4 * pi * z^2 * Z_eff * e^4 * N * ds</div>
+
+                <h4>Microdosimetry</h4>
+                <p>Specific energy <code>z</code>, frequency-mean specific energy <code>z_F</code>, and dose-averaged LET <code>L_D</code> are scored across target domains:</p>
+                <div class="eq-box">z   = epsilon / m
+z_F = (Sum of z_i) / N_hits
+L_D = (Sum of L_i * epsilon_i) / (Sum of epsilon_i)</div>
+
+                <h4>Microdosimetric Kinetic Model (MKM) & Overkill Saturation</h4>
+                <p>For a domain of diameter <code>d</code> (µm), the analytic dose-mean specific energy <code>z_D</code> is corrected for high-LET overkill using saturation parameter <code>z_0</code> (from <code>y_0 = 150 keV/µm</code>):</p>
+                <div class="eq-box">z_D   = (0.204 * L_D) / d^2
+z_D*  = (z_0^2 / z_D) * (1 - exp(-(z_D^2) / z_0^2))
+alpha = alpha_X + beta_X * z_D*
+S     = exp(-alpha * D - beta_X * D^2)</div>
+            </div>
+
+            <div id="m-format" class="modal-section">
+                <h4>Input File Structure (.i)</h4>
+                <p>C.A.C reads a strict whitespace-separated file ignoring <code>#</code> comments. All spatial coordinates and radii are in <strong>centimeters (cm)</strong>, while <code>d</code> is in <strong>µm</strong> and energies are in <strong>MeV</strong>.</p>
+                <ul>
+                    <li><strong>Block 1 (6 lines):</strong> <code>nps_total</code>, <code>global_ds</code>, <code>e_cut</code>, <code>use_straggling</code>, <code>max_tracks</code>, <code>output_dir</code></li>
+                    <li><strong>Block 2 (7 lines):</strong> <code>src_mode</code>, <code>src_E0</code>, <code>src_x src_y src_z</code>, <code>dedx_file</code>, <code>rho_mat</code>, <code>Z_eff</code>, <code>A_eff</code></li>
+                    <li><strong>Block 3 (4 lines):</strong> <code>d</code>, <code>ref_dose</code>, <code>alpha_X</code>, <code>beta_X</code></li>
+                    <li><strong>Block 4 (2 lines):</strong> <code>save_svg</code>, <code>render_window</code></li>
+                    <li><strong>Block 5 (1 + N lines):</strong> <code>num_cells</code> followed by <code>ID X Y Z R_nuc R_cyto Source_Probability</code></li>
+                </ul>
+                <h4>Generated Output Files</h4>
+                <ul>
+                    <li><code>cellular_dosimetry.dat</code> — Macroscopic dose & hit counts per nucleus and cytoplasm.</li>
+                    <li><code>radiobiology_rbe.dat</code> — <code>z_F</code>, <code>z_D</code>, <code>L_D</code>, Survival Fraction, and RBE per cell.</li>
+                    <li><code>microdosimetry_z_spectra.dat</code> — Analytic <code>f1(z)</code> distribution for the MKM domain.</li>
+                    <li><code>let_spectra.dat</code> — Dose-averaged LET spectrum.</li>
+                    <li><code>tracks.dat</code> — 3D XYZ track coordinate projections.</li>
+                    <li><code>*.svg</code> — Native vector plots (when <code>save SVG = 1</code>).</li>
+                </ul>
+            </div>
+
+            <div id="m-keys" class="modal-section">
+                <h4>Viewport Interactions</h4>
+                <ul>
+                    <li><strong>Click Cell:</strong> Select cell and open its parameters in the right Inspector.</li>
+                    <li><strong>Drag Cell (XY / XZ / YZ views):</strong> Reposition cell within the active plane with real-time 3D overlap rejection.</li>
+                    <li><strong>Drag Golden Star (src_mode = 1):</strong> Reposition the 3D point source directly in any 2D view.</li>
+                    <li><strong>Drag Empty Space:</strong> Pan camera in 2D views, or Orbit camera in 3D view.</li>
+                    <li><strong>Mouse Wheel:</strong> Zoom smoothly toward cursor (2D) or center (3D).</li>
+                    <li><strong>Drag & Drop a <code>.i</code> File:</strong> Drop any C.A.C input file directly onto the canvas to load and inspect it.</li>
+                </ul>
+                <h4>Keyboard Shortcuts</h4>
+                <ul>
+                    <li><span class="kbd">Ctrl</span> + <span class="kbd">Z</span> — Undo geometry change</li>
+                    <li><span class="kbd">Ctrl</span> + <span class="kbd">Y</span> — Redo geometry change</li>
+                    <li><span class="kbd">Delete</span> / <span class="kbd">Backspace</span> — Delete selected cell</li>
+                    <li><span class="kbd">F</span> — Fit all cells into viewport</li>
+                    <li><span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span> <span class="kbd">4</span> — Switch between XY, XZ, YZ, and 3D views</li>
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <span style="margin-right:auto; font-size:11.5px; color:var(--text-muted);">Authors: Mehrdad S. Beni & Hiroshi Watabe · GPL License</span>
+            <button class="btn btn-solid close-modal" data-target="manual-modal">Done</button>
+        </div>
+    </div>
+</div>
+
+<div id="preview-modal" class="modal-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Generated C.A.C Input File Preview</h3>
+            <button class="btn btn-outline btn-sm close-modal" data-target="preview-modal">Close</button>
+        </div>
+        <div class="modal-body">
+            <div class="row" style="margin-bottom:10px; justify-content:space-between;">
+                <div class="row">
+                    <span class="unit-tag">Filename:</span>
+                    <input type="text" id="export-filename" value="inputs.i" style="width:180px;">
+                </div>
+                <span id="preview-validation-pill" class="pill pill-ok">Ready for C.A.C v1.0.0</span>
+            </div>
+            <textarea id="preview-textarea" class="code-preview" readonly></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="copy-preview-btn">Copy to Clipboard</button>
+            <button class="btn btn-primary" id="download-from-preview-btn">Download .i File</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const CLEARANCE = 1.001;
+    const CM_TO_UM = 10000;
+
+    const state = {
+        cells: [],
+        selectedIndex: -1,
+        viewMode: 'xy',
+        showIds: true,
+        showGrid: true,
+        sliceEnabled: false,
+        sliceValueUm: 0,
+        panX: 0,
+        panY: 0,
+        zoom: 48000,
+        yaw: 0.62,
+        pitch: 0.42,
+        zoom3d: 42000,
+        draggingMode: null,
+        dragStartMouse: { x: 0, y: 0 },
+        dragStartCam: { x: 0, y: 0, yaw: 0, pitch: 0 },
+        dragCellOffset: { u: 0, v: 0 },
+        dragDirty: false,
+        collisionFlash: [],
+        flashTimer: null,
+        undoStack: [],
+        redoStack: []
+    };
+
+    const canvas = document.getElementById('main-canvas');
+    const ctx = canvas.getContext('2d');
+    const canvasWrap = document.getElementById('canvas-wrap');
+
+    const el = (id) => document.getElementById(id);
+
+    function toast(msg, type) {
+        const box = el('toast-container');
+        const div = document.createElement('div');
+        div.className = 'toast ' + (type || '');
+        div.textContent = msg;
+        box.appendChild(div);
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.25s';
+            setTimeout(() => div.remove(), 260);
+        }, 3200);
+    }
+
+    function pushUndo() {
+        state.undoStack.push({
+            cells: state.cells.map(c => ({ ...c })),
+            selectedIndex: state.selectedIndex
+        });
+        if (state.undoStack.length > 40) state.undoStack.shift();
+        state.redoStack = [];
+        updateUndoButtons();
+    }
+
+    function undo() {
+        if (state.undoStack.length === 0) return;
+        state.redoStack.push({
+            cells: state.cells.map(c => ({ ...c })),
+            selectedIndex: state.selectedIndex
+        });
+        const prev = state.undoStack.pop();
+        state.cells = prev.cells;
+        state.selectedIndex = prev.selectedIndex;
+        refreshAll();
+        toast('Undid last geometry action');
+    }
+
+    function redo() {
+        if (state.redoStack.length === 0) return;
+        state.undoStack.push({
+            cells: state.cells.map(c => ({ ...c })),
+            selectedIndex: state.selectedIndex
+        });
+        const next = state.redoStack.pop();
+        state.cells = next.cells;
+        state.selectedIndex = next.selectedIndex;
+        refreshAll();
+        toast('Redid geometry action');
+    }
+
+    function updateUndoButtons() {
+        el('undo-btn').disabled = state.undoStack.length === 0;
+        el('redo-btn').disabled = state.redoStack.length === 0;
+    }
+
+    function dist3D(a, b) {
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const dz = a.z - b.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    function findColliders(candidate, ignoreIdx) {
+        const hits = [];
+        for (let i = 0; i < state.cells.length; i++) {
+            if (i === ignoreIdx) continue;
+            const other = state.cells[i];
+            const minD = (candidate.rcyto + other.rcyto) * CLEARANCE;
+            if (dist3D(candidate, other) < minD) {
+                hits.push(i);
+            }
+        }
+        return hits;
+    }
+
+    function countAllOverlaps() {
+        let count = 0;
+        for (let i = 0; i < state.cells.length; i++) {
+            for (let j = i + 1; j < state.cells.length; j++) {
+                const minD = (state.cells[i].rcyto + state.cells[j].rcyto) * CLEARANCE;
+                if (dist3D(state.cells[i], state.cells[j]) < minD) count++;
+            }
+        }
+        return count;
+    }
+
+    function triggerCollisionFlash(indices) {
+        state.collisionFlash = indices.slice();
+        if (state.flashTimer) clearTimeout(state.flashTimer);
+        state.flashTimer = setTimeout(() => {
+            state.collisionFlash = [];
+            render();
+        }, 380);
+    }
+
+    function getDefaults() {
+        const rnuc = parseFloat(el('global-rnuc').value);
+        const rcyto = parseFloat(el('global-rcyto').value);
+        const safeRcyto = (Number.isFinite(rcyto) && rcyto > 0) ? rcyto : 1.0e-3;
+        const safeRnuc = (Number.isFinite(rnuc) && rnuc > 0 && rnuc < safeRcyto) ? rnuc : safeRcyto * 0.5;
+        return { rnuc: safeRnuc, rcyto: safeRcyto };
+    }
+
+    function getSourcePoint() {
+        return {
+            x: parseFloat(el('cfg-srcx').value) || 0,
+            y: parseFloat(el('cfg-srcy').value) || 0,
+            z: parseFloat(el('cfg-srcz').value) || 0
+        };
+    }
+
+    function getActiveAxes() {
+        if (state.viewMode === 'xy') return { u: 'x', v: 'y', w: 'z' };
+        if (state.viewMode === 'xz') return { u: 'x', v: 'z', w: 'y' };
+        return { u: 'y', v: 'z', w: 'x' };
+    }
+
+    function sim2DToScreen(u, v) {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        return {
+            sx: w * 0.5 + state.panX + u * state.zoom,
+            sy: h * 0.5 + state.panY - v * state.zoom
+        };
+    }
+
+    function screenToSim2D(sx, sy) {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        return {
+            u: (sx - w * 0.5 - state.panX) / state.zoom,
+            v: -(sy - h * 0.5 - state.panY) / state.zoom
+        };
+    }
+
+    function project3D(x, y, z) {
+        const cosY = Math.cos(state.yaw);
+        const sinY = Math.sin(state.yaw);
+        const cosP = Math.cos(state.pitch);
+        const sinP = Math.sin(state.pitch);
+        const x1 = x * cosY - z * sinY;
+        const z1 = x * sinY + z * cosY;
+        const y2 = y * cosP - z1 * sinP;
+        const z2 = y * sinP + z1 * cosP;
+        const focal = 0.08;
+        const persp = focal / Math.max(0.01, focal - z2);
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        return {
+            sx: w * 0.5 + x1 * state.zoom3d * persp,
+            sy: h * 0.5 - y2 * state.zoom3d * persp,
+            depth: z2,
+            scale: state.zoom3d * persp
+        };
+    }
+
+    function probToColor(prob) {
+        const p = Math.max(0, Math.min(1, Number(prob) || 0));
+        if (p <= 0) return { fill: '#475569', stroke: '#1e293b', glow: null };
+        const t = Math.pow(p, 0.45);
+        const r = Math.round(190 + 54 * t);
+        const g = Math.round(70 - 41 * t);
+        const b = Math.round(95 - 23 * t);
+        return {
+            fill: 'rgb(' + r + ',' + g + ',' + b + ')',
+            stroke: '#881337',
+            glow: 'rgba(225, 29, 72, ' + (0.18 + 0.35 * t).toFixed(2) + ')'
+        };
+    }
+
+    function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvasWrap.getBoundingClientRect();
+        canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        render();
+    }
+
+    function niceStepUm(pxPerUm) {
+        const targetPx = 75;
+        const rawUm = targetPx / Math.max(pxPerUm, 1e-6);
+        const pow10 = Math.pow(10, Math.floor(Math.log10(rawUm)));
+        const norm = rawUm / pow10;
+        let mult = 1;
+        if (norm >= 5) mult = 5;
+        else if (norm >= 2) mult = 2;
+        return mult * pow10;
+    }
+
+    function drawGrid2D() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        const pxPerUm = state.zoom / CM_TO_UM;
+        const stepUm = niceStepUm(pxPerUm);
+        const stepCm = stepUm / CM_TO_UM;
+        const tl = screenToSim2D(0, 0);
+        const br = screenToSim2D(w, h);
+        const axes = getActiveAxes();
+
+        if (state.showGrid) {
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            const uStart = Math.floor(tl.u / stepCm) * stepCm;
+            for (let u = uStart; u <= br.u + stepCm; u += stepCm) {
+                const p = sim2DToScreen(u, 0);
+                ctx.moveTo(p.sx, 0);
+                ctx.lineTo(p.sx, h);
+            }
+            const vStart = Math.floor(br.v / stepCm) * stepCm;
+            for (let v = vStart; v <= tl.v + stepCm; v += stepCm) {
+                const p = sim2DToScreen(0, v);
+                ctx.moveTo(0, p.sy);
+                ctx.lineTo(w, p.sy);
+            }
+            ctx.stroke();
+
+            const origin = sim2DToScreen(0, 0);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1.25;
+            ctx.beginPath();
+            ctx.moveTo(0, origin.sy);
+            ctx.lineTo(w, origin.sy);
+            ctx.moveTo(origin.sx, 0);
+            ctx.lineTo(origin.sx, h);
+            ctx.stroke();
+
+            ctx.fillStyle = '#64748b';
+            ctx.font = '600 11px ' + getComputedStyle(document.body).fontFamily;
+            ctx.fillText('+' + axes.u.toUpperCase() + ' (µm)', w - 58, Math.min(h - 14, Math.max(58, origin.sy - 6)));
+            ctx.fillText('+' + axes.v.toUpperCase() + ' (µm)', Math.min(w - 60, Math.max(12, origin.sx + 6)), 64);
+        }
+
+        const barPx = stepUm * pxPerUm;
+        const bx = 20;
+        const by = h - 22;
+        ctx.fillStyle = 'rgba(255,255,255,0.88)';
+        ctx.fillRect(bx - 8, by - 22, Math.max(barPx + 16, 72), 30);
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(bx, by);
+        ctx.lineTo(bx + barPx, by);
+        ctx.moveTo(bx, by - 4);
+        ctx.lineTo(bx, by + 3);
+        ctx.moveTo(bx + barPx, by - 4);
+        ctx.lineTo(bx + barPx, by + 3);
+        ctx.stroke();
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '600 11px ui-monospace, monospace';
+        ctx.fillText(stepUm + ' µm', bx, by - 8);
+    }
+
+    function drawPointSourceStar(sx, sy, radiusPx) {
+        ctx.save();
+        ctx.translate(sx, sy);
+        if (radiusPx > 8) {
+            ctx.beginPath();
+            ctx.arc(0, 0, radiusPx, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.35)';
+            ctx.setLineDash([5, 5]);
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+        const spikes = 8;
+        const outerR = 10;
+        const innerR = 4.5;
+        ctx.beginPath();
+        for (let i = 0; i < spikes * 2; i++) {
+            const r = (i % 2 === 0) ? outerR : innerR;
+            const ang = (i * Math.PI) / spikes;
+            const px = Math.cos(ang) * r;
+            const py = Math.sin(ang) * r;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fillStyle = '#f59e0b';
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = '#92400e';
+        ctx.stroke();
+        ctx.fillStyle = '#92400e';
+        ctx.font = '700 10.5px sans-serif';
+        ctx.fillText('SRC', 12, 4);
+        ctx.restore();
+    }
+
+    function estimateRangeCm() {
+        const e0 = parseFloat(el('cfg-srce0').value) || 5.3;
+        const rho = parseFloat(el('cfg-rho').value) || 1.0;
+        const rangeUmWater = 2.65 * Math.pow(e0, 1.63);
+        return (rangeUmWater / rho) / CM_TO_UM;
+    }
+
+    function render2D() {
+        drawGrid2D();
+        const axes = getActiveAxes();
+        const sliceCm = state.sliceValueUm / CM_TO_UM;
+
+        const sorted = state.cells.map((c, idx) => ({ c, idx, depth: c[axes.w] }))
+            .sort((a, b) => a.depth - b.depth);
+
+        for (let k = 0; k < sorted.length; k++) {
+            const { c, idx } = sorted[k];
+            const depthDelta = Math.abs(c[axes.w] - sliceCm);
+            let alpha = 1.0;
+            if (state.sliceEnabled) {
+                if (depthDelta > c.rcyto * 1.15) alpha = 0.14;
+                else alpha = 1.0;
+            }
+            const pos = sim2DToScreen(c[axes.u], c[axes.v]);
+            const rcPx = Math.max(2, c.rcyto * state.zoom);
+            const rnPx = Math.max(1.2, c.rnuc * state.zoom);
+            const isSel = idx === state.selectedIndex;
+            const isFlash = state.collisionFlash.indexOf(idx) !== -1;
+            const col = probToColor(c.prob);
+
+            ctx.save();
+            ctx.globalAlpha = alpha;
+
+            if (col.glow && c.prob > 0) {
+                ctx.beginPath();
+                ctx.arc(pos.sx, pos.sy, rcPx + 4, 0, Math.PI * 2);
+                ctx.fillStyle = col.glow;
+                ctx.fill();
+            }
+
+            ctx.beginPath();
+            ctx.arc(pos.sx, pos.sy, rcPx, 0, Math.PI * 2);
+            ctx.fillStyle = isFlash ? 'rgba(220, 38, 38, 0.28)' : 'rgba(148, 163, 184, 0.24)';
+            ctx.fill();
+            ctx.lineWidth = isSel ? 2.5 : (isFlash ? 2.5 : 1.2);
+            ctx.strokeStyle = isFlash ? '#dc2626' : (isSel ? '#2563eb' : '#475569');
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(pos.sx, pos.sy, rnPx, 0, Math.PI * 2);
+            ctx.fillStyle = col.fill;
+            ctx.fill();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = col.stroke;
+            ctx.stroke();
+
+            if (isSel) {
+                ctx.beginPath();
+                ctx.arc(pos.sx, pos.sy, rcPx + 4, 0, Math.PI * 2);
+                ctx.setLineDash([4, 3]);
+                ctx.strokeStyle = '#2563eb';
+                ctx.lineWidth = 1.6;
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            if (state.showIds && rcPx >= 9) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '700 ' + Math.min(12, Math.max(8, Math.round(rnPx * 0.9))) + 'px ui-monospace, monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(String(idx + 1), pos.sx, pos.sy);
+            }
+
+            ctx.restore();
+        }
+
+        if (el('cfg-srcmode').value === '1') {
+            const sp = getSourcePoint();
+            const p = sim2DToScreen(sp[axes.u], sp[axes.v]);
+            drawPointSourceStar(p.sx, p.sy, estimateRangeCm() * state.zoom);
+        }
+    }
+
+    function render3D() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        const bgGrad = ctx.createRadialGradient(w * 0.5, h * 0.45, 20, w * 0.5, h * 0.5, Math.max(w, h) * 0.7);
+        bgGrad.addColorStop(0, '#ffffff');
+        bgGrad.addColorStop(1, '#e2e8f0');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, w, h);
+
+        if (state.showGrid) {
+            const axLen = 0.0045;
+            const o = project3D(0, 0, 0);
+            const axDefs = [
+                { p: project3D(axLen, 0, 0), label: '+X', color: '#ef4444' },
+                { p: project3D(0, axLen, 0), label: '+Y', color: '#10b981' },
+                { p: project3D(0, 0, axLen), label: '+Z', color: '#3b82f6' }
+            ];
+            for (const a of axDefs) {
+                ctx.beginPath();
+                ctx.moveTo(o.sx, o.sy);
+                ctx.lineTo(a.p.sx, a.p.sy);
+                ctx.strokeStyle = a.color;
+                ctx.lineWidth = 1.6;
+                ctx.stroke();
+                ctx.fillStyle = a.color;
+                ctx.font = '700 11px sans-serif';
+                ctx.fillText(a.label, a.p.sx + 4, a.p.sy + 4);
+            }
+        }
+
+        const drawables = state.cells.map((c, idx) => {
+            const pr = project3D(c.x, c.y, c.z);
+            return { type: 'cell', c, idx, pr };
+        });
+
+        if (el('cfg-srcmode').value === '1') {
+            const sp = getSourcePoint();
+            drawables.push({ type: 'src', pr: project3D(sp.x, sp.y, sp.z) });
+        }
+
+        drawables.sort((a, b) => a.pr.depth - b.pr.depth);
+
+        for (const item of drawables) {
+            if (item.type === 'src') {
+                drawPointSourceStar(item.pr.sx, item.pr.sy, 0);
+                continue;
+            }
+            const { c, idx, pr } = item;
+            const rcPx = Math.max(2.5, c.rcyto * pr.scale);
+            const rnPx = Math.max(1.5, c.rnuc * pr.scale);
+            const isSel = idx === state.selectedIndex;
+            const col = probToColor(c.prob);
+
+            const cytoGrad = ctx.createRadialGradient(
+                pr.sx - rcPx * 0.3, pr.sy - rcPx * 0.3, rcPx * 0.1,
+                pr.sx, pr.sy, rcPx
+            );
+            cytoGrad.addColorStop(0, 'rgba(255, 255, 255, 0.55)');
+            cytoGrad.addColorStop(0.65, 'rgba(148, 163, 184, 0.25)');
+            cytoGrad.addColorStop(1, 'rgba(71, 85, 105, 0.38)');
+
+            ctx.beginPath();
+            ctx.arc(pr.sx, pr.sy, rcPx, 0, Math.PI * 2);
+            ctx.fillStyle = cytoGrad;
+            ctx.fill();
+            ctx.lineWidth = isSel ? 2.4 : 1;
+            ctx.strokeStyle = isSel ? '#2563eb' : 'rgba(71, 85, 105, 0.55)';
+            ctx.stroke();
+
+            const nucGrad = ctx.createRadialGradient(
+                pr.sx - rnPx * 0.32, pr.sy - rnPx * 0.32, rnPx * 0.1,
+                pr.sx, pr.sy, rnPx
+            );
+            nucGrad.addColorStop(0, c.prob > 0 ? '#fda4af' : '#94a3b8');
+            nucGrad.addColorStop(0.6, col.fill);
+            nucGrad.addColorStop(1, col.stroke);
+
+            ctx.beginPath();
+            ctx.arc(pr.sx, pr.sy, rnPx, 0, Math.PI * 2);
+            ctx.fillStyle = nucGrad;
+            ctx.fill();
+
+            if (state.showIds && rcPx >= 11) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '700 ' + Math.min(11, Math.max(8, Math.round(rnPx * 0.85))) + 'px ui-monospace, monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(String(idx + 1), pr.sx, pr.sy);
+            }
+        }
+    }
+
+    function render() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        ctx.clearRect(0, 0, w, h);
+        if (state.viewMode === '3d') render3D();
+        else render2D();
+    }
+
+    function fitView() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        if (state.cells.length === 0) {
+            state.panX = 0;
+            state.panY = 0;
+            state.zoom = 48000;
+            state.zoom3d = 42000;
+            render();
+            return;
+        }
+        let minX = Infinity, maxX = -Infinity;
+        let minY = Infinity, maxY = -Infinity;
+        let minZ = Infinity, maxZ = -Infinity;
+        let maxR3 = 0;
+        for (const c of state.cells) {
+            minX = Math.min(minX, c.x - c.rcyto);
+            maxX = Math.max(maxX, c.x + c.rcyto);
+            minY = Math.min(minY, c.y - c.rcyto);
+            maxY = Math.max(maxY, c.y + c.rcyto);
+            minZ = Math.min(minZ, c.z - c.rcyto);
+            maxZ = Math.max(maxZ, c.z + c.rcyto);
+            maxR3 = Math.max(maxR3, Math.sqrt(c.x * c.x + c.y * c.y + c.z * c.z) + c.rcyto);
+        }
+        if (el('cfg-srcmode').value === '1') {
+            const sp = getSourcePoint();
+            minX = Math.min(minX, sp.x); maxX = Math.max(maxX, sp.x);
+            minY = Math.min(minY, sp.y); maxY = Math.max(maxY, sp.y);
+            minZ = Math.min(minZ, sp.z); maxZ = Math.max(maxZ, sp.z);
+            maxR3 = Math.max(maxR3, Math.sqrt(sp.x * sp.x + sp.y * sp.y + sp.z * sp.z) + 5e-4);
+        }
+        if (state.viewMode === '3d') {
+            state.zoom3d = (Math.min(w, h) * 0.39) / Math.max(maxR3, 1e-3);
+        } else {
+            const axes = getActiveAxes();
+            const bounds = { x: [minX, maxX], y: [minY, maxY], z: [minZ, maxZ] };
+            const spanU = Math.max(bounds[axes.u][1] - bounds[axes.u][0], 2e-3);
+            const spanV = Math.max(bounds[axes.v][1] - bounds[axes.v][0], 2e-3);
+            const midU = (bounds[axes.u][0] + bounds[axes.u][1]) * 0.5;
+            const midV = (bounds[axes.v][0] + bounds[axes.v][1]) * 0.5;
+            state.zoom = Math.min((w * 0.78) / spanU, (h * 0.78) / spanV);
+            state.panX = -midU * state.zoom;
+            state.panY = midV * state.zoom;
+        }
+        render();
+    }
+
+    function hitTestCell(mx, my) {
+        if (state.viewMode === '3d') {
+            const projected = state.cells.map((c, idx) => ({ c, idx, pr: project3D(c.x, c.y, c.z) }))
+                .sort((a, b) => b.pr.depth - a.pr.depth);
+            for (const item of projected) {
+                const r = Math.max(6, item.c.rcyto * item.pr.scale);
+                if (Math.hypot(mx - item.pr.sx, my - item.pr.sy) <= r) return item.idx;
+            }
+            return -1;
+        }
+        const axes = getActiveAxes();
+        const sliceCm = state.sliceValueUm / CM_TO_UM;
+        const sorted = state.cells.map((c, idx) => ({ c, idx, depth: c[axes.w] }))
+            .sort((a, b) => b.depth - a.depth);
+        for (const item of sorted) {
+            if (state.sliceEnabled && Math.abs(item.c[axes.w] - sliceCm) > item.c.rcyto * 1.15) continue;
+            const p = sim2DToScreen(item.c[axes.u], item.c[axes.v]);
+            const r = Math.max(6, item.c.rcyto * state.zoom);
+            if (Math.hypot(mx - p.sx, my - p.sy) <= r) return item.idx;
+        }
+        return -1;
+    }
+
+    function hitTestPointSource(mx, my) {
+        if (state.viewMode === '3d' || el('cfg-srcmode').value !== '1') return false;
+        const axes = getActiveAxes();
+        const sp = getSourcePoint();
+        const p = sim2DToScreen(sp[axes.u], sp[axes.v]);
+        return Math.hypot(mx - p.sx, my - p.sy) <= 13;
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        state.dragStartMouse = { x: mx, y: my };
+        state.dragDirty = false;
+
+        if (hitTestPointSource(mx, my)) {
+            state.draggingMode = 'source';
+            canvasWrap.classList.add('dragging');
+            return;
+        }
+
+        const hitIdx = hitTestCell(mx, my);
+        if (hitIdx !== -1) {
+            state.selectedIndex = hitIdx;
+            updateInspector();
+            updateRosterSelection();
+            render();
+            if (state.viewMode !== '3d') {
+                const axes = getActiveAxes();
+                const simMouse = screenToSim2D(mx, my);
+                state.dragCellOffset = {
+                    u: state.cells[hitIdx][axes.u] - simMouse.u,
+                    v: state.cells[hitIdx][axes.v] - simMouse.v
+                };
+                state.draggingMode = 'cell';
+                canvasWrap.classList.add('dragging');
+            }
+            return;
+        }
+
+        if (state.viewMode === '3d') {
+            state.draggingMode = 'orbit';
+            state.dragStartCam = { yaw: state.yaw, pitch: state.pitch };
+        } else {
+            state.draggingMode = 'pan';
+            state.dragStartCam = { x: state.panX, y: state.panY };
+            state.selectedIndex = -1;
+            updateInspector();
+            updateRosterSelection();
+            render();
+        }
+        canvasWrap.classList.add('dragging');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        if (mx >= 0 && my >= 0 && mx <= rect.width && my <= rect.height && state.viewMode !== '3d') {
+            const axes = getActiveAxes();
+            const sim = screenToSim2D(mx, my);
+            el('status-cursor').textContent =
+                axes.u.toUpperCase() + ': ' + (sim.u * CM_TO_UM).toFixed(1) + ' µm, ' +
+                axes.v.toUpperCase() + ': ' + (sim.v * CM_TO_UM).toFixed(1) + ' µm';
+        }
+
+        if (!state.draggingMode) return;
+
+        if (state.draggingMode === 'pan') {
+            state.panX = state.dragStartCam.x + (mx - state.dragStartMouse.x);
+            state.panY = state.dragStartCam.y + (my - state.dragStartMouse.y);
+            render();
+        } else if (state.draggingMode === 'orbit') {
+            state.yaw = state.dragStartCam.yaw + (mx - state.dragStartMouse.x) * 0.008;
+            state.pitch = Math.max(-1.48, Math.min(1.48, state.dragStartCam.pitch + (my - state.dragStartMouse.y) * 0.008));
+            render();
+        } else if (state.draggingMode === 'source') {
+            const axes = getActiveAxes();
+            const sim = screenToSim2D(mx, my);
+            const map = { x: 'cfg-srcx', y: 'cfg-srcy', z: 'cfg-srcz' };
+            el(map[axes.u]).value = sim.u.toExponential(3);
+            el(map[axes.v]).value = sim.v.toExponential(3);
+            updateSourceReadout();
+            render();
+        } else if (state.draggingMode === 'cell' && state.selectedIndex !== -1) {
+            if (!state.dragDirty) {
+                pushUndo();
+                state.dragDirty = true;
+            }
+            const axes = getActiveAxes();
+            const sim = screenToSim2D(mx, my);
+            const cell = state.cells[state.selectedIndex];
+            const targetU = sim.u + state.dragCellOffset.u;
+            const targetV = sim.v + state.dragCellOffset.v;
+
+            const tryBoth = { ...cell };
+            tryBoth[axes.u] = targetU;
+            tryBoth[axes.v] = targetV;
+            const hitsBoth = findColliders(tryBoth, state.selectedIndex);
+
+            if (hitsBoth.length === 0) {
+                cell[axes.u] = targetU;
+                cell[axes.v] = targetV;
+            } else {
+                const tryU = { ...cell };
+                tryU[axes.u] = targetU;
+                const tryV = { ...cell };
+                tryV[axes.v] = targetV;
+                if (findColliders(tryU, state.selectedIndex).length === 0) {
+                    cell[axes.u] = targetU;
+                } else if (findColliders(tryV, state.selectedIndex).length === 0) {
+                    cell[axes.v] = targetV;
+                }
+                triggerCollisionFlash([state.selectedIndex, ...hitsBoth]);
+            }
+            updateInspector();
+            render();
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (state.draggingMode === 'cell' && state.dragDirty) {
+            updateRoster();
+            updateStatus();
+        }
+        state.draggingMode = null;
+        canvasWrap.classList.remove('dragging');
+    });
+
+    canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const factor = Math.pow(0.9985, e.deltaY);
+        if (state.viewMode === '3d') {
+            state.zoom3d = Math.max(4000, Math.min(400000, state.zoom3d * factor));
+            render();
+            return;
+        }
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const before = screenToSim2D(mx, my);
+        state.zoom = Math.max(4000, Math.min(500000, state.zoom * factor));
+        const after = screenToSim2D(mx, my);
+        state.panX += (after.u - before.u) * state.zoom;
+        state.panY -= (after.v - before.v) * state.zoom;
+        render();
+    }, { passive: false });
+
+    function updateInspector() {
+        const idx = state.selectedIndex;
+        if (idx < 0 || idx >= state.cells.length) {
+            el('empty-inspector').style.display = 'flex';
+            el('cell-editor').style.display = 'none';
+            el('inspector-badge').style.display = 'none';
+            return;
+        }
+        const c = state.cells[idx];
+        el('empty-inspector').style.display = 'none';
+        el('cell-editor').style.display = 'flex';
+        el('inspector-badge').style.display = 'inline-flex';
+        el('inspector-badge').textContent = 'Cell #' + (idx + 1);
+
+        el('edit-x').value = c.x.toExponential(4);
+        el('edit-y').value = c.y.toExponential(4);
+        el('edit-z').value = c.z.toExponential(4);
+        el('edit-rnuc').value = c.rnuc.toExponential(3);
+        el('edit-rcyto').value = c.rcyto.toExponential(3);
+        el('edit-prob').value = Number(c.prob).toFixed(3);
+        el('edit-prob-range').value = c.prob;
+
+        el('edit-x-um').textContent = (c.x * CM_TO_UM).toFixed(2) + ' µm';
+        el('edit-y-um').textContent = (c.y * CM_TO_UM).toFixed(2) + ' µm';
+        el('edit-z-um').textContent = (c.z * CM_TO_UM).toFixed(2) + ' µm';
+        el('edit-rnuc-um').textContent = (c.rnuc * CM_TO_UM).toFixed(2) + ' µm';
+        el('edit-rcyto-um').textContent = (c.rcyto * CM_TO_UM).toFixed(2) + ' µm';
+
+        const r0 = Math.sqrt(c.x * c.x + c.y * c.y + c.z * c.z) * CM_TO_UM;
+        el('edit-dist0').textContent = r0.toFixed(2) + ' µm';
+
+        let minGap = Infinity;
+        for (let i = 0; i < state.cells.length; i++) {
+            if (i === idx) continue;
+            const g = (dist3D(c, state.cells[i]) - (c.rcyto + state.cells[i].rcyto)) * CM_TO_UM;
+            if (g < minGap) minGap = g;
+        }
+        el('edit-gap').textContent = Number.isFinite(minGap) ? minGap.toFixed(2) + ' µm' : 'Isolated';
+    }
+
+    function updateRoster() {
+        const tbody = el('cell-roster-body');
+        tbody.innerHTML = '';
+        el('roster-count').textContent = state.cells.length;
+        const frag = document.createDocumentFragment();
+        state.cells.forEach((c, idx) => {
+            const tr = document.createElement('tr');
+            if (idx === state.selectedIndex) tr.className = 'selected';
+            tr.innerHTML =
+                '<td>' + (idx + 1) + '</td>' +
+                '<td>' + (c.x * CM_TO_UM).toFixed(1) + ',' + (c.y * CM_TO_UM).toFixed(1) + ',' + (c.z * CM_TO_UM).toFixed(1) + '</td>' +
+                '<td>' + (c.rcyto * CM_TO_UM).toFixed(1) + '</td>' +
+                '<td>' + Number(c.prob).toFixed(2) + '</td>';
+            tr.addEventListener('click', () => {
+                state.selectedIndex = idx;
+                updateInspector();
+                updateRosterSelection();
+                render();
+            });
+            frag.appendChild(tr);
+        });
+        tbody.appendChild(frag);
+    }
+
+    function updateRosterSelection() {
+        const rows = el('cell-roster-body').querySelectorAll('tr');
+        rows.forEach((r, i) => r.classList.toggle('selected', i === state.selectedIndex));
+    }
+
+    function updateStatus() {
+        el('status-cells').textContent = state.cells.length;
+        const ov = countAllOverlaps();
+        const ovBadge = el('status-overlap');
+        if (ov === 0) {
+            ovBadge.className = 'pill pill-ok';
+            ovBadge.textContent = '0 Overlaps · 3D Guard';
+        } else {
+            ovBadge.className = 'pill pill-err';
+            ovBadge.textContent = ov + ' Overlap(s) Detected';
+        }
+
+        const probSum = state.cells.reduce((acc, c) => acc + (Number(c.prob) || 0), 0);
+        const mode = el('cfg-srcmode').value;
+        const pb = el('prob-sum-badge');
+        pb.textContent = 'Sum: ' + probSum.toFixed(3);
+        if (mode === '2') {
+            if (Math.abs(probSum - 1) < 0.005) pb.className = 'pill pill-ok';
+            else if (probSum > 0) pb.className = 'pill pill-warn';
+            else pb.className = 'pill pill-err';
+            el('status-source').textContent = 'Mode 2 (Nuclei · Prob Sum ' + probSum.toFixed(2) + ')';
+        } else {
+            pb.className = 'pill pill-info';
+            el('status-source').textContent = 'Mode 1 (Point Source · ' + el('cfg-srce0').value + ' MeV)';
+        }
+    }
+
+    function updateDerivedMetrics() {
+        const ds = parseFloat(el('cfg-ds').value) || 0;
+        el('ds-um-tag').textContent = (ds * CM_TO_UM).toFixed(2) + ' µm';
+
+        const def = getDefaults();
+        el('def-rnuc-um').textContent = (def.rnuc * CM_TO_UM).toFixed(2) + ' µm';
+        el('def-rcyto-um').textContent = (def.rcyto * CM_TO_UM).toFixed(2) + ' µm';
+
+        const zeff = parseFloat(el('cfg-zeff').value) || 10;
+        const aeff = parseFloat(el('cfg-aeff').value) || 18.015;
+        el('metric-za').textContent = (zeff / Math.max(aeff, 1e-6)).toFixed(4);
+        el('metric-range').textContent = '~' + (estimateRangeCm() * CM_TO_UM).toFixed(1) + ' µm';
+
+        const ax = parseFloat(el('cfg-mkm-alpha').value) || 0.18;
+        const bx = parseFloat(el('cfg-mkm-beta').value) || 0.02;
+        const dref = parseFloat(el('cfg-mkm-dose').value) || 2.0;
+        el('metric-ab').textContent = (ax / Math.max(bx, 1e-9)).toFixed(2) + ' Gy';
+        const sx = Math.exp(-ax * dref - bx * dref * dref) * 100;
+        el('metric-sx').textContent = sx.toFixed(1) + '%';
+
+        el('straggle-label').textContent = el('cfg-straggle').checked ? '1 (On)' : '0 (Off)';
+        el('savesvg-label').textContent = el('cfg-savesvg').checked ? '1 (On)' : '0 (Off)';
+        el('renderwin-label').textContent = el('cfg-renderwin').checked ? '1 (On)' : '0 (Off)';
+
+        const isPoint = el('cfg-srcmode').value === '1';
+        el('point-source-box').style.display = isPoint ? 'flex' : 'none';
+        updateSourceReadout();
+        updateStatus();
+    }
+
+    function updateSourceReadout() {
+        const sp = getSourcePoint();
+        el('src-xyz-um').textContent =
+            'Position: (' + (sp.x * CM_TO_UM).toFixed(1) + ', ' +
+            (sp.y * CM_TO_UM).toFixed(1) + ', ' +
+            (sp.z * CM_TO_UM).toFixed(1) + ') µm';
+    }
+
+    function refreshAll() {
+        updateInspector();
+        updateRoster();
+        updateDerivedMetrics();
+        updateUndoButtons();
+        render();
+    }
+
+    function findFreePosition3D(rcyto, baseZ) {
+        const step = rcyto * 2.04;
+        const candidates = [];
+        const rings = 12;
+        for (let j = -rings; j <= rings; j++) {
+            for (let i = -rings; i <= rings; i++) {
+                const xOff = (Math.abs(j) % 2 === 1) ? step * 0.5 : 0;
+                const x = i * step + xOff;
+                const y = j * step * Math.sqrt(3) * 0.5;
+                candidates.push({ x, y, z: baseZ, d2: x * x + y * y });
+            }
+        }
+        candidates.sort((a, b) => a.d2 - b.d2);
+        for (const p of candidates) {
+            if (findColliders({ x: p.x, y: p.y, z: p.z, rcyto }, -1).length === 0) {
+                return p;
+            }
+        }
+        return { x: (state.cells.length + 1) * step, y: 0, z: baseZ };
+    }
+
+    function generateLayout(layout) {
+        const count = Math.max(1, Math.min(500, parseInt(el('gen-count').value, 10) || 19));
+        const gapUm = Math.max(0.05, parseFloat(el('gen-gap').value) || 0.5);
+        const def = getDefaults();
+        const step = Math.max(def.rcyto * 2 * CLEARANCE + 1e-6, def.rcyto * 2 + gapUm / CM_TO_UM);
+
+        let pts = [];
+        if (layout === 'hex2d') {
+            const rings = Math.ceil(Math.sqrt(count)) + 2;
+            for (let j = -rings; j <= rings; j++) {
+                for (let i = -rings; i <= rings; i++) {
+                    const x = i * step + (Math.abs(j) % 2 === 1 ? step * 0.5 : 0);
+                    const y = j * step * Math.sqrt(3) * 0.5;
+                    pts.push({ x, y, z: 0, d2: x * x + y * y });
+                }
+            }
+            pts.sort((a, b) => a.d2 - b.d2);
+            pts = pts.slice(0, count);
+        } else if (layout === 'square2d') {
+            const cols = Math.ceil(Math.sqrt(count));
+            const rows = Math.ceil(count / cols);
+            for (let idx = 0; idx < count; idx++) {
+                const r = Math.floor(idx / cols);
+                const c = idx % cols;
+                pts.push({
+                    x: (c - (cols - 1) * 0.5) * step,
+                    y: (r - (rows - 1) * 0.5) * step,
+                    z: 0
+                });
+            }
+        } else if (layout === 'circle2d') {
+            if (count === 1) {
+                pts.push({ x: 0, y: 0, z: 0 });
+            } else {
+                const rad = step / (2 * Math.sin(Math.PI / count));
+                for (let i = 0; i < count; i++) {
+                    const a = (i * 2 * Math.PI) / count;
+                    pts.push({ x: rad * Math.cos(a), y: rad * Math.sin(a), z: 0 });
+                }
+            }
+        } else if (layout === 'line1d') {
+            for (let i = 0; i < count; i++) {
+                pts.push({ x: (i - (count - 1) * 0.5) * step, y: 0, z: 0 });
+            }
+        } else if (layout === 'hcp3d') {
+            const radLim = Math.ceil(Math.cbrt(count)) + 2;
+            const layerDz = step * Math.sqrt(2 / 3);
+            const rowDy = step * Math.sqrt(3) * 0.5;
+            for (let k = -radLim; k <= radLim; k++) {
+                const oddLayer = Math.abs(k) % 2 === 1;
+                for (let j = -radLim; j <= radLim; j++) {
+                    for (let i = -radLim; i <= radLim; i++) {
+                        const x = (i + (Math.abs(j) % 2 === 1 ? 0.5 : 0) + (oddLayer ? 0.5 : 0)) * step;
+                        const y = j * rowDy + (oddLayer ? step / Math.sqrt(12) : 0);
+                        const z = k * layerDz;
+                        pts.push({ x, y, z, d2: x * x + y * y + z * z });
+                    }
+                }
+            }
+            pts.sort((a, b) => a.d2 - b.d2);
+            pts = pts.slice(0, count);
+        } else if (layout === 'cubic3d') {
+            const side = Math.ceil(Math.cbrt(count));
+            const half = (side - 1) * 0.5;
+            for (let k = 0; k < side; k++) {
+                for (let j = 0; j < side; j++) {
+                    for (let i = 0; i < side; i++) {
+                        const x = (i - half) * step;
+                        const y = (j - half) * step;
+                        const z = (k - half) * step;
+                        pts.push({ x, y, z, d2: x * x + y * y + z * z });
+                    }
+                }
+            }
+            pts.sort((a, b) => a.d2 - b.d2);
+            pts = pts.slice(0, count);
+        }
+
+        pushUndo();
+        state.cells = pts.map((p, idx) => ({
+            x: p.x,
+            y: p.y,
+            z: p.z,
+            rnuc: def.rnuc,
+            rcyto: def.rcyto,
+            prob: idx === 0 ? 1.0 : 0.0
+        }));
+        state.selectedIndex = state.cells.length > 0 ? 0 : -1;
+        if (layout === 'hcp3d' || layout === 'cubic3d') setViewMode('3d');
+        refreshAll();
+        fitView();
+        toast('Generated ' + state.cells.length + '-cell ' + layout.toUpperCase() + ' colony (0 overlaps)', 'success');
+    }
+
+    function buildStarterCase() {
+        el('cfg-nps').value = '100000';
+        el('cfg-ds').value = '1.0e-4';
+        el('cfg-ecut').value = '0.01';
+        el('cfg-straggle').checked = true;
+        el('cfg-tracks').value = '500';
+        el('cfg-out').value = 'output';
+        el('cfg-srcmode').value = '2';
+        el('cfg-srce0').value = '5.3';
+        el('cfg-srcx').value = '0.0';
+        el('cfg-srcy').value = '0.0';
+        el('cfg-srcz').value = '0.0';
+        el('cfg-dedx').value = 'data/water_liquid.dedx';
+        el('cfg-rho').value = '1.0';
+        el('cfg-zeff').value = '10.0';
+        el('cfg-aeff').value = '18.015';
+        el('cfg-mkm-d').value = '0.5';
+        el('cfg-mkm-dose').value = '2.0';
+        el('cfg-mkm-alpha').value = '0.18';
+        el('cfg-mkm-beta').value = '0.02';
+        el('cfg-savesvg').checked = true;
+        el('cfg-renderwin').checked = false;
+        el('global-rnuc').value = '5.0e-4';
+        el('global-rcyto').value = '1.0e-3';
+        el('gen-count').value = '19';
+        el('gen-gap').value = '0.2';
+        setViewMode('xy');
+        generateLayout('hex2d');
+    }
+
+    function buildCase1TAT() {
+        pushUndo();
+        el('cfg-nps').value = '2000000';
+        el('cfg-ds').value = '1.0e-4';
+        el('cfg-ecut').value = '0.01';
+        el('cfg-straggle').checked = true;
+        el('cfg-tracks').value = '450';
+        el('cfg-out').value = 'output_case1_tat';
+        el('cfg-srcmode').value = '2';
+        el('cfg-srce0').value = '5.83';
+        el('cfg-srcx').value = '0.0';
+        el('cfg-srcy').value = '0.0';
+        el('cfg-srcz').value = '0.0';
+        el('cfg-dedx').value = 'data/muscle_skeletal.dedx';
+        el('cfg-rho').value = '1.04';
+        el('cfg-zeff').value = '7.42';
+        el('cfg-aeff').value = '13.50';
+        el('cfg-mkm-d').value = '0.5';
+        el('cfg-mkm-dose').value = '2.0';
+        el('cfg-mkm-alpha').value = '0.15';
+        el('cfg-mkm-beta').value = '0.03';
+        el('cfg-savesvg').checked = true;
+        el('cfg-renderwin').checked = false;
+        el('global-rnuc').value = '5.50e-4';
+        el('global-rcyto').value = '9.00e-4';
+
+        const rows = [
+            [0, 0, 0, 0.40],
+            [1.85e-3, 0, 0, 0.05], [0.925e-3, 1.60215e-3, 0, 0.05], [-0.925e-3, 1.60215e-3, 0, 0.05],
+            [-1.85e-3, 0, 0, 0.05], [-0.925e-3, -1.60215e-3, 0, 0.05], [0.925e-3, -1.60215e-3, 0, 0.05],
+            [2.775e-3, 1.60215e-3, 0, 0], [0, 3.20429e-3, 0, 0], [-2.775e-3, 1.60215e-3, 0, 0],
+            [-2.775e-3, -1.60215e-3, 0, 0], [0, -3.20429e-3, 0, 0], [2.775e-3, -1.60215e-3, 0, 0],
+            [3.70e-3, 0, 0, 0], [1.85e-3, 3.20429e-3, 0, 0], [-1.85e-3, 3.20429e-3, 0, 0],
+            [-3.70e-3, 0, 0, 0], [-1.85e-3, -3.20429e-3, 0, 0], [1.85e-3, -3.20429e-3, 0, 0],
+            [0, 1.06810e-3, 1.52e-3, 0.05], [-0.925e-3, -0.53405e-3, 1.52e-3, 0.05], [0.925e-3, -0.53405e-3, 1.52e-3, 0.05],
+            [0, 1.06810e-3, -1.52e-3, 0.05], [-0.925e-3, -0.53405e-3, -1.52e-3, 0.05], [0.925e-3, -0.53405e-3, -1.52e-3, 0.05],
+            [0, -2.13620e-3, 1.52e-3, 0], [1.85e-3, 1.06810e-3, 1.52e-3, 0], [-1.85e-3, 1.06810e-3, 1.52e-3, 0],
+            [0, -2.13620e-3, -1.52e-3, 0], [1.85e-3, 1.06810e-3, -1.52e-3, 0], [-1.85e-3, 1.06810e-3, -1.52e-3, 0],
+            [0, 0, 3.04e-3, 0], [0, 0, -3.04e-3, 0]
+        ];
+        state.cells = rows.map(r => ({ x: r[0], y: r[1], z: r[2], rnuc: 5.5e-4, rcyto: 9.0e-4, prob: r[3] }));
+        state.selectedIndex = 0;
+        setViewMode('3d');
+        refreshAll();
+        fitView();
+        toast('Loaded Case 1: 33-Cell 3D HCP Tumor Spheroid (Ac-225)', 'success');
+    }
+
+    function buildCase2Radon() {
+        pushUndo();
+        el('cfg-nps').value = '40000000';
+        el('cfg-ds').value = '1.0e-4';
+        el('cfg-ecut').value = '0.01';
+        el('cfg-straggle').checked = true;
+        el('cfg-tracks').value = '500';
+        el('cfg-out').value = 'output_case2_radon';
+        el('cfg-srcmode').value = '1';
+        el('cfg-srce0').value = '7.69';
+        el('cfg-srcx').value = '0.0';
+        el('cfg-srcy').value = '3.80e-3';
+        el('cfg-srcz').value = '0.0';
+        el('cfg-dedx').value = 'data/water_liquid.dedx';
+        el('cfg-rho').value = '1.00';
+        el('cfg-zeff').value = '10.0';
+        el('cfg-aeff').value = '18.015';
+        el('cfg-mkm-d').value = '0.5';
+        el('cfg-mkm-dose').value = '2.0';
+        el('cfg-mkm-alpha').value = '0.25';
+        el('cfg-mkm-beta').value = '0.025';
+        el('cfg-savesvg').checked = true;
+        el('cfg-renderwin').checked = false;
+        el('global-rnuc').value = '4.50e-4';
+        el('global-rcyto').value = '7.50e-4';
+
+        const list = [];
+        const z5 = [0, 1.6e-3, -1.6e-3, 3.2e-3, -3.2e-3];
+        const z3 = [0, 1.6e-3, -1.6e-3];
+        for (const z of z5) {
+            for (const x of [-3.2e-3, -1.6e-3, 0, 1.6e-3, 3.2e-3]) {
+                list.push({ x, y: 1.9e-3, z, rnuc: 4.5e-4, rcyto: 7.5e-4, prob: 0 });
+            }
+        }
+        for (const z of z5) {
+            for (const x of [-2.4e-3, -0.8e-3, 0.8e-3, 2.4e-3]) {
+                list.push({ x, y: 0.4e-3, z, rnuc: 4.2e-4, rcyto: 6.8e-4, prob: 0 });
+            }
+        }
+        for (const z of z5) {
+            for (const x of [-3.6e-3, -2.4e-3, -1.2e-3, 0, 1.2e-3, 2.4e-3, 3.6e-3]) {
+                list.push({ x, y: -1.0e-3, z, rnuc: 3.9e-4, rcyto: 5.4e-4, prob: 0 });
+            }
+        }
+        for (const z of z3) {
+            for (const x of [-1.5e-3, 0, 1.5e-3]) {
+                list.push({ x, y: -2.4e-3, z, rnuc: 3.8e-4, rcyto: 5.8e-4, prob: 0 });
+            }
+        }
+        state.cells = list;
+        state.selectedIndex = 2;
+        setViewMode('xy');
+        refreshAll();
+        fitView();
+        toast('Loaded Case 2: 89-Cell 3D Bronchial Wall (Po-214 Point Source)', 'success');
+    }
+
+    function buildCase3Po210() {
+        pushUndo();
+        el('cfg-nps').value = '2000000';
+        el('cfg-ds').value = '1.0e-4';
+        el('cfg-ecut').value = '0.01';
+        el('cfg-straggle').checked = true;
+        el('cfg-tracks').value = '450';
+        el('cfg-out').value = 'output_case3_po210';
+        el('cfg-srcmode').value = '2';
+        el('cfg-srce0').value = '5.30';
+        el('cfg-srcx').value = '0.0';
+        el('cfg-srcy').value = '0.0';
+        el('cfg-srcz').value = '0.0';
+        el('cfg-dedx').value = 'data/adipose_tissue.dedx';
+        el('cfg-rho').value = '0.92';
+        el('cfg-zeff').value = '6.36';
+        el('cfg-aeff').value = '11.39';
+        el('cfg-mkm-d').value = '0.5';
+        el('cfg-mkm-dose').value = '2.0';
+        el('cfg-mkm-alpha').value = '0.20';
+        el('cfg-mkm-beta').value = '0.02';
+        el('cfg-savesvg').checked = true;
+        el('cfg-renderwin').checked = false;
+        el('global-rnuc').value = '4.20e-4';
+        el('global-rcyto').value = '6.00e-4';
+
+        const list = [{ x: 0, y: 0, z: 0, rnuc: 5.5e-4, rcyto: 1.15e-3, prob: 1.0 }];
+        const s1 = [
+            [1.95e-3, 0, 0], [1.37886e-3, 1.37886e-3, 0], [0, 1.95e-3, 0], [-1.37886e-3, 1.37886e-3, 0],
+            [-1.95e-3, 0, 0], [-1.37886e-3, -1.37886e-3, 0], [0, -1.95e-3, 0], [1.37886e-3, -1.37886e-3, 0],
+            [1.246e-3, 0, 1.5e-3], [-0.623e-3, 1.07907e-3, 1.5e-3], [-0.623e-3, -1.07907e-3, 1.5e-3],
+            [0.623e-3, 1.07907e-3, -1.5e-3], [-1.246e-3, 0, -1.5e-3], [0.623e-3, -1.07907e-3, -1.5e-3]
+        ];
+        for (const p of s1) list.push({ x: p[0], y: p[1], z: p[2], rnuc: 4.2e-4, rcyto: 6.0e-4, prob: 0 });
+        const s2 = [
+            [3.3e-3, 0, 0], [2.66976e-3, 1.93969e-3, 0], [1.01976e-3, 3.13849e-3, 0], [-1.01976e-3, 3.13849e-3, 0],
+            [-2.66976e-3, 1.93969e-3, 0], [-3.3e-3, 0, 0], [-2.66976e-3, -1.93969e-3, 0], [-1.01976e-3, -3.13849e-3, 0],
+            [1.01976e-3, -3.13849e-3, 0], [2.66976e-3, -1.93969e-3, 0],
+            [2.63049e-3, 0.85470e-3, 1.8e-3], [-0.85470e-3, 2.63049e-3, 1.8e-3], [-2.63049e-3, -0.85470e-3, 1.8e-3], [0.85470e-3, -2.63049e-3, 1.8e-3],
+            [1.62573e-3, 2.23763e-3, -1.8e-3], [-2.23763e-3, 1.62573e-3, -1.8e-3], [-1.62573e-3, -2.23763e-3, -1.8e-3], [2.23763e-3, -1.62573e-3, -1.8e-3],
+            [4.13710e-3, 1.34422e-3, 0], [2.55687e-3, 3.51922e-3, 0], [0, 4.35e-3, 0], [-2.55687e-3, 3.51922e-3, 0],
+            [-4.13710e-3, 1.34422e-3, 0], [-4.13710e-3, -1.34422e-3, 0], [-2.55687e-3, -3.51922e-3, 0], [0, -4.35e-3, 0],
+            [2.55687e-3, -3.51922e-3, 0], [4.13710e-3, -1.34422e-3, 0]
+        ];
+        for (const p of s2) list.push({ x: p[0], y: p[1], z: p[2], rnuc: 4.0e-4, rcyto: 6.0e-4, prob: 0 });
+        state.cells = list;
+        state.selectedIndex = 0;
+        setViewMode('3d');
+        refreshAll();
+        fitView();
+        toast('Loaded Case 3: 43-Cell 3D Adipocyte-Stem Niche (Po-210)', 'success');
+    }
+
+    function setViewMode(mode) {
+        state.viewMode = mode;
+        document.querySelectorAll('.view-btn[data-view]').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === mode);
+        });
+        const is3d = mode === '3d';
+        el('slice-group').style.display = is3d ? 'none' : 'flex';
+        el('status-hint').textContent = is3d
+            ? 'Drag to orbit 3D · Scroll to zoom · Click cell to inspect'
+            : 'Drag cell to move · Scroll to zoom · Drag empty space to pan';
+        if (!is3d) {
+            const axes = getActiveAxes();
+            el('slice-axis-label').textContent = axes.w.toUpperCase() + '-Slice';
+        }
+        render();
+    }
+
+    function generateInputText() {
+        const val = (id) => el(id).value.trim();
+        const pad = (str, len) => {
+            const s = String(str);
+            return s.length >= len ? s + '  ' : s.padEnd(len);
+        };
+        const fmtSci = (num, dec) => {
+            const s = Number(num).toExponential(dec);
+            return (num >= 0 ? ' ' : '') + s;
+        };
+
+        const lines = [
+            '#--- CyricAlphaCell Parameters ---',
+            pad(val('cfg-nps'), 16) + '# nps_total',
+            pad(val('cfg-ds'), 16) + '# global_ds (cm)',
+            pad(val('cfg-ecut'), 16) + '# e_cut (MeV)',
+            pad(el('cfg-straggle').checked ? '1' : '0', 16) + '# use_straggling (1=On, 0=Off)',
+            pad(val('cfg-tracks'), 16) + '# max_tracks to record in tracks.dat',
+            pad(val('cfg-out').replace(/\s+/g, '_'), 16) + '# output directory',
+            '',
+            '#--- Source Config ---',
+            pad(val('cfg-srcmode'), 16) + '# src_mode: 1 = Point Source, 2 = Distributed inside Nuclei',
+            pad(val('cfg-srce0'), 16) + '# src_E0 (MeV)',
+            pad(val('cfg-srcx') + ' ' + val('cfg-srcy') + ' ' + val('cfg-srcz'), 24) + '# src_x, src_y, src_z (cm)',
+            pad(val('cfg-dedx'), 28) + '# Path to stopping power file',
+            pad(val('cfg-rho'), 16) + '# rho_mat density (g/cm^3)',
+            pad(val('cfg-zeff'), 16) + '# Z_eff effective atomic number',
+            pad(val('cfg-aeff'), 16) + '# A_eff effective mass',
+            '',
+            '#--- Radiobiology Parameters (MKM Model) ---',
+            pad(val('cfg-mkm-d'), 16) + '# Bio domain diameter d (um)',
+            pad(val('cfg-mkm-dose'), 16) + '# Reference Target Dose (Gy)',
+            pad(val('cfg-mkm-alpha'), 16) + '# Reference X-ray alpha (Gy^-1)',
+            pad(val('cfg-mkm-beta'), 16) + '# Reference X-ray beta (Gy^-2)',
+            '',
+            '#--- Plotting Option ---',
+            pad(el('cfg-savesvg').checked ? '1' : '0', 16) + '# save SVG (1=On, 0=Off)',
+            pad(el('cfg-renderwin').checked ? '1' : '0', 16) + '# render window (1=On, 0=Off)',
+            '',
+            '#--- Cellular Colony Geometry ---',
+            pad(state.cells.length, 16) + '# num_cells',
+            '# ID    X(cm)          Y(cm)          Z(cm)          R_nuc(cm)     R_cyto(cm)    Source_Probability'
+        ];
+
+        state.cells.forEach((c, idx) => {
+            const row =
+                pad(idx + 1, 7) +
+                pad(fmtSci(c.x, 5), 15) +
+                pad(fmtSci(c.y, 5), 15) +
+                pad(fmtSci(c.z, 5), 15) +
+                pad(Number(c.rnuc).toExponential(2), 14) +
+                pad(Number(c.rcyto).toExponential(2), 14) +
+                Number(c.prob).toFixed(4);
+            lines.push(row);
+        });
+
+        return lines.join('\n') + '\n';
+    }
+
+    function validateBeforeExport() {
+        if (state.cells.length === 0) {
+            toast('Add at least one cell before exporting.', 'error');
+            return false;
+        }
+        if (countAllOverlaps() > 0) {
+            toast('Export blocked: overlapping cells detected.', 'error');
+            return false;
+        }
+        if (el('cfg-srcmode').value === '2') {
+            const pSum = state.cells.reduce((a, c) => a + c.prob, 0);
+            if (pSum <= 0) {
+                toast('Warning: src_mode = 2 has total Source_Probability = 0. Set at least one cell probability > 0.', 'warn');
+            }
+        }
+        return true;
+    }
+
+    function downloadInputFile(filename) {
+        if (!validateBeforeExport()) return;
+        const text = generateInputText();
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename || 'inputs.i';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast('Exported ' + (filename || 'inputs.i') + ' (' + state.cells.length + ' cells)', 'success');
+    }
+
+    function parseAndLoadInputText(rawText) {
+        const cleanLines = rawText.split(/\r?\n/).map(line => {
+            const hashIdx = line.indexOf('#');
+            return (hashIdx >= 0 ? line.slice(0, hashIdx) : line).trim();
+        }).filter(l => l.length > 0);
+
+        if (cleanLines.length < 20) {
+            toast('Invalid .i file: fewer than 20 required configuration lines.', 'error');
+            return;
+        }
+
+        const srcCoords = cleanLines[8].split(/\s+/);
+        if (srcCoords.length < 3) {
+            toast('Invalid .i file: src_x src_y src_z line must have 3 values.', 'error');
+            return;
+        }
+
+        const expectedCells = parseInt(cleanLines[19], 10);
+        const parsedCells = [];
+        let rejected = 0;
+
+        for (let i = 20; i < cleanLines.length; i++) {
+            const toks = cleanLines[i].split(/\s+/);
+            if (toks.length < 7) continue;
+            const cand = {
+                x: parseFloat(toks[1]),
+                y: parseFloat(toks[2]),
+                z: parseFloat(toks[3]),
+                rnuc: parseFloat(toks[4]),
+                rcyto: parseFloat(toks[5]),
+                prob: parseFloat(toks[6])
+            };
+            if (!Number.isFinite(cand.x) || !Number.isFinite(cand.y) || !Number.isFinite(cand.z) ||
+                !Number.isFinite(cand.rnuc) || !Number.isFinite(cand.rcyto) || cand.rnuc >= cand.rcyto || cand.rcyto <= 0) {
+                rejected++;
+                continue;
+            }
+            let overlap = false;
+            for (const ex of parsedCells) {
+                if (dist3D(cand, ex) < (cand.rcyto + ex.rcyto) * CLEARANCE) {
+                    overlap = true;
+                    break;
+                }
+            }
+            if (overlap) {
+                rejected++;
+            } else {
+                parsedCells.push(cand);
+            }
+        }
+
+        pushUndo();
+        el('cfg-nps').value = cleanLines[0];
+        el('cfg-ds').value = cleanLines[1];
+        el('cfg-ecut').value = cleanLines[2];
+        el('cfg-straggle').checked = parseInt(cleanLines[3], 10) === 1;
+        el('cfg-tracks').value = cleanLines[4];
+        el('cfg-out').value = cleanLines[5];
+        el('cfg-srcmode').value = String(parseInt(cleanLines[6], 10) === 1 ? 1 : 2);
+        el('cfg-srce0').value = cleanLines[7];
+        el('cfg-srcx').value = srcCoords[0];
+        el('cfg-srcy').value = srcCoords[1];
+        el('cfg-srcz').value = srcCoords[2];
+        el('cfg-dedx').value = cleanLines[9];
+        el('cfg-rho').value = cleanLines[10];
+        el('cfg-zeff').value = cleanLines[11];
+        el('cfg-aeff').value = cleanLines[12];
+        el('cfg-mkm-d').value = cleanLines[13];
+        el('cfg-mkm-dose').value = cleanLines[14];
+        el('cfg-mkm-alpha').value = cleanLines[15];
+        el('cfg-mkm-beta').value = cleanLines[16];
+        el('cfg-savesvg').checked = parseInt(cleanLines[17], 10) === 1;
+        el('cfg-renderwin').checked = parseInt(cleanLines[18], 10) === 1;
+
+        state.cells = parsedCells;
+        state.selectedIndex = parsedCells.length > 0 ? 0 : -1;
+        const has3D = parsedCells.some(c => Math.abs(c.z) > 1e-7);
+        setViewMode(has3D ? '3d' : 'xy');
+        refreshAll();
+        fitView();
+
+        if (rejected > 0) {
+            toast('Imported ' + parsedCells.length + ' cells. Rejected ' + rejected + ' invalid or overlapping cell(s).', 'warn');
+        } else {
+            toast('Imported ' + parsedCells.length + ' of ' + expectedCells + ' cells cleanly (0 overlaps).', 'success');
+        }
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            el(btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    document.querySelectorAll('.view-btn[data-view]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            setViewMode(btn.dataset.view);
+            fitView();
+        });
+    });
+
+    el('toggle-ids-btn').addEventListener('click', (e) => {
+        state.showIds = !state.showIds;
+        e.currentTarget.classList.toggle('active', state.showIds);
+        render();
+    });
+
+    el('toggle-grid-btn').addEventListener('click', (e) => {
+        state.showGrid = !state.showGrid;
+        e.currentTarget.classList.toggle('active', state.showGrid);
+        render();
+    });
+
+    el('fit-view-btn').addEventListener('click', fitView);
+    el('undo-btn').addEventListener('click', undo);
+    el('redo-btn').addEventListener('click', redo);
+
+    el('slice-enable').addEventListener('change', (e) => {
+        state.sliceEnabled = e.target.checked;
+        el('slice-slider').disabled = !state.sliceEnabled;
+        el('slice-val').textContent = state.sliceEnabled ? state.sliceValueUm + ' µm' : 'All';
+        render();
+    });
+
+    el('slice-slider').addEventListener('input', (e) => {
+        state.sliceValueUm = parseFloat(e.target.value);
+        el('slice-val').textContent = state.sliceValueUm + ' µm';
+        render();
+    });
+
+    el('template-select').addEventListener('change', (e) => {
+        const v = e.target.value;
+        if (v === 'starter') buildStarterCase();
+        else if (v === 'case1') buildCase1TAT();
+        else if (v === 'case2') buildCase2Radon();
+        else if (v === 'case3') buildCase3Po210();
+        e.target.value = '';
+    });
+
+    document.querySelectorAll('.chip[data-e0]').forEach(chip => {
+        chip.addEventListener('click', () => {
+            el('cfg-srce0').value = chip.dataset.e0;
+            updateDerivedMetrics();
+            render();
+        });
+    });
+
+    const matPresets = {
+        water: { dedx: 'data/water_liquid.dedx', rho: '1.00', zeff: '10.0', aeff: '18.015' },
+        muscle: { dedx: 'data/muscle_skeletal.dedx', rho: '1.04', zeff: '7.42', aeff: '13.50' },
+        adipose: { dedx: 'data/adipose_tissue.dedx', rho: '0.92', zeff: '6.36', aeff: '11.39' }
+    };
+
+    document.querySelectorAll('.chip[data-mat]').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const m = matPresets[chip.dataset.mat];
+            el('cfg-dedx').value = m.dedx;
+            el('cfg-rho').value = m.rho;
+            el('cfg-zeff').value = m.zeff;
+            el('cfg-aeff').value = m.aeff;
+            updateDerivedMetrics();
+            render();
+            toast('Applied ' + chip.textContent + ' material properties');
+        });
+    });
+
+    const bioPresets = {
+        default: { d: '0.5', dose: '2.0', alpha: '0.18', beta: '0.02' },
+        tumor: { d: '0.5', dose: '2.0', alpha: '0.15', beta: '0.03' },
+        bronchial: { d: '0.5', dose: '2.0', alpha: '0.25', beta: '0.025' },
+        stem: { d: '0.5', dose: '2.0', alpha: '0.20', beta: '0.02' }
+    };
+
+    document.querySelectorAll('.chip[data-bio]').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const b = bioPresets[chip.dataset.bio];
+            el('cfg-mkm-d').value = b.d;
+            el('cfg-mkm-dose').value = b.dose;
+            el('cfg-mkm-alpha').value = b.alpha;
+            el('cfg-mkm-beta').value = b.beta;
+            updateDerivedMetrics();
+            toast('Applied ' + chip.textContent + ' MKM preset');
+        });
+    });
+
+    ['cfg-ds', 'cfg-srce0', 'cfg-srcmode', 'cfg-srcx', 'cfg-srcy', 'cfg-srcz',
+     'cfg-rho', 'cfg-zeff', 'cfg-aeff', 'cfg-mkm-d', 'cfg-mkm-dose',
+     'cfg-mkm-alpha', 'cfg-mkm-beta', 'cfg-straggle', 'cfg-savesvg',
+     'cfg-renderwin', 'global-rnuc', 'global-rcyto'].forEach(id => {
+        el(id).addEventListener('input', () => {
+            updateDerivedMetrics();
+            render();
+        });
+        el(id).addEventListener('change', () => {
+            updateDerivedMetrics();
+            render();
+        });
+    });
+
+    el('add-cell-btn').addEventListener('click', () => {
+        const def = getDefaults();
+        const baseZ = state.sliceEnabled && state.viewMode === 'xy' ? state.sliceValueUm / CM_TO_UM : 0;
+        const pos = findFreePosition3D(def.rcyto, baseZ);
+        pushUndo();
+        state.cells.push({
+            x: pos.x,
+            y: pos.y,
+            z: pos.z,
+            rnuc: def.rnuc,
+            rcyto: def.rcyto,
+            prob: state.cells.length === 0 ? 1.0 : 0.0
+        });
+        state.selectedIndex = state.cells.length - 1;
+        refreshAll();
+    });
+
+    el('clear-all-btn').addEventListener('click', () => {
+        if (state.cells.length === 0) return;
+        pushUndo();
+        state.cells = [];
+        state.selectedIndex = -1;
+        refreshAll();
+        toast('Cleared all cells');
+    });
+
+    document.querySelectorAll('.gen-btn').forEach(btn => {
+        btn.addEventListener('click', () => generateLayout(btn.dataset.layout));
+    });
+
+    el('prob-norm-btn').addEventListener('click', () => {
+        const sum = state.cells.reduce((a, c) => a + c.prob, 0);
+        if (sum <= 0) {
+            toast('All probabilities are zero; assign at least one > 0 first.', 'warn');
+            return;
+        }
+        pushUndo();
+        state.cells.forEach(c => { c.prob = c.prob / sum; });
+        refreshAll();
+        toast('Normalized probabilities to sum to 1.000', 'success');
+    });
+
+    el('prob-center-btn').addEventListener('click', () => {
+        if (state.cells.length === 0) return;
+        pushUndo();
+        state.cells.forEach((c, i) => { c.prob = i === 0 ? 1.0 : 0.0; });
+        refreshAll();
+        toast('Set Cell #1 as sole source (Prob = 1.0)');
+    });
+
+    el('prob-uniform-btn').addEventListener('click', () => {
+        if (state.cells.length === 0) return;
+        pushUndo();
+        const p = 1.0 / state.cells.length;
+        state.cells.forEach(c => { c.prob = p; });
+        refreshAll();
+        toast('Distributed uniform source probability across all ' + state.cells.length + ' cells');
+    });
+
+    el('edit-prob-range').addEventListener('input', (e) => {
+        el('edit-prob').value = parseFloat(e.target.value).toFixed(2);
+    });
+
+    el('edit-prob').addEventListener('input', (e) => {
+        const v = Math.max(0, Math.min(1, parseFloat(e.target.value) || 0));
+        el('edit-prob-range').value = v;
+    });
+
+    document.querySelectorAll('.prob-quick').forEach(btn => {
+        btn.addEventListener('click', () => {
+            el('edit-prob').value = btn.dataset.val;
+            el('edit-prob-range').value = btn.dataset.val;
+        });
+    });
+
+    el('apply-cell-btn').addEventListener('click', () => {
+        const idx = state.selectedIndex;
+        if (idx < 0 || idx >= state.cells.length) return;
+        const cand = {
+            x: parseFloat(el('edit-x').value),
+            y: parseFloat(el('edit-y').value),
+            z: parseFloat(el('edit-z').value),
+            rnuc: parseFloat(el('edit-rnuc').value),
+            rcyto: parseFloat(el('edit-rcyto').value),
+            prob: Math.max(0, Math.min(1, parseFloat(el('edit-prob').value) || 0))
+        };
+        if (!Number.isFinite(cand.x) || !Number.isFinite(cand.y) || !Number.isFinite(cand.z) ||
+            !Number.isFinite(cand.rnuc) || !Number.isFinite(cand.rcyto)) {
+            toast('Please enter valid numeric values.', 'error');
+            return;
+        }
+        if (cand.rnuc <= 0 || cand.rcyto <= 0 || cand.rnuc >= cand.rcyto) {
+            toast('Invalid radii: R_nuc must be positive and strictly smaller than R_cyto.', 'error');
+            return;
+        }
+        const hits = findColliders(cand, idx);
+        if (hits.length > 0) {
+            triggerCollisionFlash([idx, ...hits]);
+            render();
+            toast('Update rejected: 3D overlap with Cell #' + hits.map(i => i + 1).join(', #'), 'error');
+            return;
+        }
+        pushUndo();
+        state.cells[idx] = cand;
+        refreshAll();
+        toast('Updated Cell #' + (idx + 1), 'success');
+    });
+
+    el('clone-cell-btn').addEventListener('click', () => {
+        const idx = state.selectedIndex;
+        if (idx < 0 || idx >= state.cells.length) return;
+        const src = state.cells[idx];
+        const step = src.rcyto * 2.05;
+        let placed = null;
+        for (let r = 1; r <= 12 && !placed; r++) {
+            for (let a = 0; a < 12; a++) {
+                const ang = (a * Math.PI * 2) / 12;
+                const cand = {
+                    x: src.x + Math.cos(ang) * step * r,
+                    y: src.y + Math.sin(ang) * step * r,
+                    z: src.z,
+                    rnuc: src.rnuc,
+                    rcyto: src.rcyto,
+                    prob: 0.0
+                };
+                if (findColliders(cand, -1).length === 0) {
+                    placed = cand;
+                    break;
+                }
+            }
+        }
+        if (!placed) {
+            toast('Could not find free nearby space.', 'error');
+            return;
+        }
+        pushUndo();
+        state.cells.push(placed);
+        state.selectedIndex = state.cells.length - 1;
+        refreshAll();
+        toast('Cloned Cell #' + (idx + 1) + ' as Cell #' + state.cells.length);
+    });
+
+    el('delete-cell-btn').addEventListener('click', () => {
+        const idx = state.selectedIndex;
+        if (idx < 0 || idx >= state.cells.length) return;
+        pushUndo();
+        state.cells.splice(idx, 1);
+        state.selectedIndex = -1;
+        refreshAll();
+        toast('Deleted Cell #' + (idx + 1));
+    });
+
+    el('import-btn').addEventListener('click', () => el('import-file-input').click());
+    el('import-file-input').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => parseAndLoadInputText(ev.target.result);
+        reader.readAsText(file);
+        e.target.value = '';
+    });
+
+    canvasWrap.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        canvasWrap.classList.add('drag-over');
+    });
+    canvasWrap.addEventListener('dragleave', () => canvasWrap.classList.remove('drag-over'));
+    canvasWrap.addEventListener('drop', (e) => {
+        e.preventDefault();
+        canvasWrap.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => parseAndLoadInputText(ev.target.result);
+        reader.readAsText(file);
+    });
+
+    el('export-btn').addEventListener('click', () => downloadInputFile(el('export-filename').value || 'inputs.i'));
+
+    el('preview-btn').addEventListener('click', () => {
+        el('preview-textarea').value = generateInputText();
+        const ov = countAllOverlaps();
+        const pill = el('preview-validation-pill');
+        if (ov === 0 && state.cells.length > 0) {
+            pill.className = 'pill pill-ok';
+            pill.textContent = 'Valid · ' + state.cells.length + ' Cells · 0 Overlaps';
+        } else {
+            pill.className = 'pill pill-err';
+            pill.textContent = state.cells.length === 0 ? 'No Cells Defined' : ov + ' Overlap(s)';
+        }
+        el('preview-modal').classList.add('open');
+    });
+
+    el('copy-preview-btn').addEventListener('click', () => {
+        navigator.clipboard.writeText(el('preview-textarea').value).then(() => {
+            toast('Copied .i file to clipboard', 'success');
+        });
+    });
+
+    el('download-from-preview-btn').addEventListener('click', () => {
+        downloadInputFile(el('export-filename').value.trim() || 'inputs.i');
+    });
+
+    el('manual-btn').addEventListener('click', () => el('manual-modal').classList.add('open'));
+    el('dismiss-welcome').addEventListener('click', () => el('welcome-banner').classList.add('hidden'));
+
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', () => el(btn.dataset.target).classList.remove('open'));
+    });
+
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        backdrop.addEventListener('click', (e) => {
+            if (e.target === backdrop) backdrop.classList.remove('open');
+        });
+    });
+
+    document.querySelectorAll('.modal-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.modal-section').forEach(s => s.classList.remove('active'));
+            tab.classList.add('active');
+            el(tab.dataset.msect).classList.add('active');
+        });
+    });
+
+    const tooltip = el('tooltip');
+    document.addEventListener('mouseover', (e) => {
+        const target = e.target.closest('[data-help]');
+        if (!target) return;
+        tooltip.textContent = target.dataset.help;
+        tooltip.classList.add('visible');
+        const r = target.getBoundingClientRect();
+        const tw = tooltip.offsetWidth;
+        const th = tooltip.offsetHeight;
+        let left = r.right + 10;
+        if (left + tw > window.innerWidth - 12) left = r.left - tw - 10;
+        let top = r.top - th * 0.35;
+        if (top < 10) top = 10;
+        if (top + th > window.innerHeight - 10) top = window.innerHeight - th - 10;
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('[data-help]')) tooltip.classList.remove('visible');
+    });
+
+    window.addEventListener('keydown', (e) => {
+        const tag = document.activeElement.tagName;
+        const inField = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+            e.preventDefault();
+            undo();
+            return;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+            e.preventDefault();
+            redo();
+            return;
+        }
+        if (inField) return;
+        if ((e.key === 'Delete' || e.key === 'Backspace') && state.selectedIndex !== -1) {
+            e.preventDefault();
+            el('delete-cell-btn').click();
+        } else if (e.key.toLowerCase() === 'f') {
+            fitView();
+        } else if (e.key === '1') {
+            setViewMode('xy'); fitView();
+        } else if (e.key === '2') {
+            setViewMode('xz'); fitView();
+        } else if (e.key === '3') {
+            setViewMode('yz'); fitView();
+        } else if (e.key === '4') {
+            setViewMode('3d'); fitView();
+        }
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    buildStarterCase();
+    state.undoStack = [];
+    updateUndoButtons();
+})();
+</script>
+</body>
+</html>
